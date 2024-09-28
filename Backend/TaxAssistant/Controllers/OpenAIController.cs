@@ -1,7 +1,6 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Services;
-using TaxAssistant.External.Services;
 
 namespace TaxAssistant.Controllers;
 
@@ -9,28 +8,28 @@ namespace TaxAssistant.Controllers;
 [Route("api/openai")]
 public class OpenAIController : ControllerBase
 {
-    private readonly ILLMService _llmService;
     private readonly IDeclarationService _declarationService;
     
-    public OpenAIController(ILLMService llmService, IDeclarationService declarationService)
+    public OpenAIController(IDeclarationService declarationService)
     {
-        _llmService = llmService;
         _declarationService = declarationService;
     }
-
+    
     [HttpPost("generate-llm-response")]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GenerateLlmResponse(string userMessage, bool isInitialMessage)
     {
-        var message = await _llmService.GenerateMessageAsync("Hello", "text");
+        if (isInitialMessage)
+        {
+            return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(userMessage));
+        }
         
-        return Ok(message);
+        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(userMessage));
     }
     
-    [HttpGet]
-    [Route("get-declaration-file")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromQuery] Guid declarationId)
+    [HttpPost("generate-declaration-file")]
+    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
     {
-        var declaration = await _declarationService.GetDeclarationByIdAsync(declarationId);
+        var declaration = await _declarationService.GenerateFileAsync(formFile);
 
         return File
         (
@@ -39,5 +38,4 @@ public class OpenAIController : ControllerBase
             declaration.FileName
         );
     }
-
 }
