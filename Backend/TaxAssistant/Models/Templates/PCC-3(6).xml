@@ -4,47 +4,50 @@
 		<KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PCC-3</KodFormularza>
 		<WariantFormularza>6</WariantFormularza>
 		<CelZlozenia poz="P_6">1</CelZlozenia>
-		<Data poz="P_4">{{}}</Data>
-		<KodUrzedu>{{}}</KodUrzedu>
+		<Data poz="P_4">{{ date_of_action }}</Data>
+		<KodUrzedu>{{ office_name }}</KodUrzedu>
 	</Naglowek>
 	<Podmiot1 rola="Podatnik">
+		{{ if taxpayer_type == 'individual' }}
 		<OsobaFizyczna>
-			<PESEL>{{}}</PESEL>
-			<ImiePierwsze>{{}}</ImiePierwsze>
-			<Nazwisko>{{}}</Nazwisko>
-			<DataUrodzenia>{{}}</DataUrodzenia>
+			<PESEL>{{ taxpayer_data.pesel }}</PESEL>
+			<ImiePierwsze>{{ taxpayer_data.first_name }}</ImiePierwsze>
+			<Nazwisko>{{ taxpayer_data.last_name }}</Nazwisko>
+			<DataUrodzenia>{{ taxpayer_data.date_of_birth }}</DataUrodzenia>
 		</OsobaFizyczna>
-		//if
+		{{ end }}
+		{{ if taxpayer_type == 'company' }}
 		<OsobaNiefizyczna>
-      		<NIP>{{}}</NIP>
-      		<PelnaNazwa>{{}}</PelnaNazwa>
-      		<SkroconaNazwa>{{}}</SkroconaNazwa>
+      		<NIP>{{ taxpayer_data.nip }}</NIP>
+      		<PelnaNazwa>{{ taxpayer_data.full_name }}</PelnaNazwa>
+      		<SkroconaNazwa>{{ taxpayer_data.short_name }}</SkroconaNazwa>
     	</OsobaNiefizyczna>
+		{{ end }}
 		<AdresZamieszkaniaSiedziby rodzajAdresu="RAD">
 			<AdresPol>
-				<KodKraju>{{}}</KodKraju>
-				<Wojewodztwo>{{}}</Wojewodztwo>
-				<Powiat>{{}}</Powiat>
-				<Gmina>{{}}</Gmina>
-				<Ulica>{{}}</Ulica> if
-				<NrDomu>{{}}</NrDomu>
-				<NrLokalu>{{}}</NrLokalu> if
-				<Miejscowosc>{{}}</Miejscowosc>
-				<KodPocztowy>{{}}</KodPocztowy>
+				<KodKraju>{{ address.country }}</KodKraju>
+				<Wojewodztwo>{{ address.province }}</Wojewodztwo>
+				<Powiat>{{ address.county }}</Powiat>
+				<Gmina>{{ address.municipality }}</Gmina>
+				<Ulica>{{ address.street }}</Ulica>
+				<NrDomu>{{ address.house_number }}</NrDomu>
+				<NrLokalu>{{ address.apartment_number }}</NrLokalu>
+				<Miejscowosc>{{ address.city }}</Miejscowosc>
+				<KodPocztowy>{{ address.postal_code }}</KodPocztowy>
 			</AdresPol>
 		</AdresZamieszkaniaSiedziby>
 	</Podmiot1>
 	<PozycjeSzczegolowe>
-		<P_7>{{}}</P_7>
+		<P_7>{{ entity_submittint_action }}</P_7>
 		<P_20>1</P_20>
 		<P_21>1</P_21>
 		<P_22>1</P_22>
-		<P_23>{{}}</P_23>
-		<P_26>{{}}</P_26> //kwota
-		<P_27>{{}}</P_27> //kwota * 0.02
-		<P_46>{{}}</P_46> // p_27
-		<P_53>{{}}</P_53> // p_27
-		<P_62>{{}}</P_62> // 0 - default, 1+ ->zalezne od ilosci wspolwlascicieli
+		<P_23>{{ action_description }}</P_23>
+		<P_26>{{ amount }}</P_26>
+		<P_27>{{ amount * 0.02 }}</P_27>
+		<P_46>{{ amount * 0.02 }}</P_46>
+		<P_53>{{ amount * 0.02 }}</P_53>
+		<P_62>0</P_62>
 	</PozycjeSzczegolowe>
 	<Pouczenia>1</Pouczenia>
 </Deklaracja>
