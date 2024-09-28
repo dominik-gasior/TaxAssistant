@@ -1,5 +1,4 @@
-
-using TaxAssistant.Clients;
+using TaxAssistant.Utils;
 
 namespace TaxAssistant;
 
@@ -13,7 +12,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.RegisterClients(builder.Configuration);
-        
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())

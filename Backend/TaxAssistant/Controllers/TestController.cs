@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.Clients.Llms;
+using TaxAssistant.External.Clients;
 
 namespace TaxAssistant.Controllers;
 
@@ -8,12 +8,12 @@ namespace TaxAssistant.Controllers;
 public class TestController : ControllerBase
 {
     private readonly ILlmClient _llmClient;
-    
+
     public TestController(ILlmClient llmClient)
     {
         _llmClient = llmClient;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
