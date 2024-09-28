@@ -1,3 +1,4 @@
+using TaxAssistant.Declarations.Services;
 using TaxAssistant.Utils;
 
 namespace TaxAssistant;
@@ -12,7 +13,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.RegisterClients(builder.Configuration);
-
+        builder.Services.AddScoped<IDeclarationService, DeclarationService>();
+        
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())

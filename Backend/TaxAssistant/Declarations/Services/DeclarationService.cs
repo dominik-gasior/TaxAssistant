@@ -11,6 +11,14 @@ public interface IDeclarationService
 
 public class DeclarationService : IDeclarationService
 {
+    public string GenerateNextFieldQuestion()
+    {
+        var nextQuestion = string.Empty;
+
+
+        return nextQuestion;
+    }
+    
     public Task<DeclarationFileResponse> GetDeclarationByIdAsync(Guid id)
     {
         //TODO : Get declaration from the store by id
