@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Deklaracja xmlns="http://crd.gov.pl/wzor/2023/12/13/13064/">
+	<Naglowek>
+		<KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PCC-3</KodFormularza>
+		<WariantFormularza>6</WariantFormularza>
+		<CelZlozenia poz="P_6">1</CelZlozenia>
+		<Data poz="P_4">12/28/2000</Data>
+		<KodUrzedu>OfficeName</KodUrzedu>
+	</Naglowek>
+	<Podmiot1 rola="Podatnik">
+		
+				<OsobaFizyczna>
+					<PESEL>12343234565</PESEL>
+					<ImiePierwsze>FirstName</ImiePierwsze>
+					<Nazwisko>LastName</Nazwisko>
+					<DataUrodzenia>01/01/0001</DataUrodzenia>
+				</OsobaFizyczna>
+				
+		
+		<AdresZamieszkaniaSiedziby rodzajAdresu="RAD">
+			<AdresPol>
+				<KodKraju>Country</KodKraju>
+				<Wojewodztwo>Province</Wojewodztwo>
+				<Powiat>County</Powiat>
+				<Gmina>Municipality</Gmina>
+				<Ulica>Street</Ulica>
+				<NrDomu>HouseNumber</NrDomu>
+				<NrLokalu>ApartmentNumber</NrLokalu>
+				<Miejscowosc>City</Miejscowosc>
+				<KodPocztowy>01-111</KodPocztowy>
+			</AdresPol>
+		</AdresZamieszkaniaSiedziby>
+	</Podmiot1>
+	<PozycjeSzczegolowe>
+		<P_7>5</P_7>
+		<P_20>1</P_20>
+		<P_21>1</P_21>
+		<P_22>1</P_22>
+		<P_23>ActionDescription</P_23>
+		<P_26>1000</P_26>
+		<P_27>20</P_27>
+		<P_46>20</P_46>
+		<P_53>20</P_53>
+		<P_62>0</P_62>
+	</PozycjeSzczegolowe>
+	<Pouczenia>1</Pouczenia>
+</Deklaracja>

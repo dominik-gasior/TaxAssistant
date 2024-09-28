@@ -1,19 +1,19 @@
 using Scriban;
-using TaxAssistant.Utils;
-using TaxAssistant.Utils.Exceptions;
+using TaxAssistant.Extensions;
+using TaxAssistant.Extensions.Exceptions;
 
 namespace TaxAssistant.Models;
 
 public interface IFormService
 {
-    public string Generate(string formName, object replaceGap);
+    public string Generate(string templateName, object replaceGap);
 }
 
 public class FormService : IFormService
 {
-    public string Generate(string formName, object replaceGap)
+    public string Generate(string templateName, object replaceGap)
     {
-        var form = FetchForm(formName);
+        var form = FetchForm(templateName);
         return ReplaceGapsInForm(form, replaceGap);
     }
 
