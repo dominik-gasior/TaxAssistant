@@ -14,7 +14,7 @@ public class DownloadFileController : ControllerBase
         _declarationService = declarationService;
     }
 
-    [HttpPost("download-file")]
+    [HttpGet("download-file")]
     public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
     {
         var declaration = await _declarationService.GenerateFileAsync(formFile);
