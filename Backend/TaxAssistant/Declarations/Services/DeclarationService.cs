@@ -11,7 +11,7 @@ namespace TaxAssistant.Declarations.Services;
 public interface IDeclarationService
 {
     Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync(string userMessage);
-    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string userMessage);
+    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage);
     Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile);
 }
 
@@ -49,7 +49,7 @@ public class DeclarationService : IDeclarationService
         );
     }
     
-    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string userMessage)
+    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage)
     {
         //var prompt = PromptsProvider.QuestionsClassification();
 
@@ -57,10 +57,12 @@ public class DeclarationService : IDeclarationService
         {
             
         };
-        
-        var nextQuestions = QuestionsProvider.GetNotAnsweredQuestions(answeredQuestionsIds.ToArray());
 
-        if (!nextQuestions.Any())
+        var strategy = _strategies.First(s => s.DeclarationType.Equals(declarationType, StringComparison.InvariantCultureIgnoreCase));
+        
+        var nextQuestions = QuestionsProvider.GetNotAnsweredQuestions(strategy.QuestionsPool, answeredQuestionsIds.ToArray());
+
+        if (nextQuestions.Count == 0)
         {
             return await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(), "text");
         }

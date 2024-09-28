@@ -16,14 +16,14 @@ public class OpenAIController : ControllerBase
     }
     
     [HttpPost("generate-llm-response")]
-    public async Task<IActionResult> GenerateLlmResponse(string userMessage, bool isInitialMessage)
+    public async Task<IActionResult> GenerateLlmResponse(string userMessage, bool isInitialMessage, string declarationType)
     {
         if (isInitialMessage)
         {
             return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(userMessage));
         }
         
-        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(userMessage));
+        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(declarationType, userMessage));
     }
     
     [HttpPost("generate-declaration-file")]
