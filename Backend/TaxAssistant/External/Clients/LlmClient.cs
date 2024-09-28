@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using TaxAssistant.External.Llms;
+using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.External.Clients;
 

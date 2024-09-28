@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
+using TaxAssistant.Extensions;
 using TaxAssistant.External.Clients;
-using TaxAssistant.External.Llms;
 using TaxAssistant.External.Responses;
-using TaxAssistant.Utils;
+using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.External.Services;
 

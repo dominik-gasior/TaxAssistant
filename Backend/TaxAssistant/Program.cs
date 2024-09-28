@@ -1,6 +1,7 @@
 using TaxAssistant.Declarations;
+using TaxAssistant.Extensions;
+using TaxAssistant.Extensions.Middlewares;
 using TaxAssistant.External.Services;
-using TaxAssistant.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 

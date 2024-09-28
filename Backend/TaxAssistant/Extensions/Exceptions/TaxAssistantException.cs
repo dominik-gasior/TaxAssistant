@@ -1,6 +1,4 @@
-using System;
-
-namespace TaxAssistant.Utils.Exceptions;
+namespace TaxAssistant.Extensions.Exceptions;
 
 public abstract class TaxAssistantException : Exception
 {

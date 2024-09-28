@@ -1,10 +1,9 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
 using TaxAssistant.External.Clients;
-using TaxAssistant.External.Llms;
 using TaxAssistant.External.Settings;
 
-namespace TaxAssistant.Utils;
+namespace TaxAssistant.Extensions;
 
 public static class ClientConfigurations
 {
