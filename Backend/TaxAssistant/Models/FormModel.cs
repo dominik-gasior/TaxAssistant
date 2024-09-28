@@ -59,8 +59,6 @@ public record Address
     public string PostalCode { get; init; }
 }
 
-//po co kwota wartosci rynkowej?
-
 public record IndividualTaxpayer
 {
     [JsonPropertyName("first_name")] //P_8 | ImiePierwsze | 
@@ -75,7 +73,6 @@ public record IndividualTaxpayer
     [JsonPropertyName("date_of_birth")] //P_8 | DataUrodzenia | validacja + format 1954-12-18
     public DateOnly DateOfBirth { get; init; }
 }
-
 
 public record CompanyTaxpayer
 {
