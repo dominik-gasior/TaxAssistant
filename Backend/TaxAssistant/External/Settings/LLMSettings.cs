@@ -1,6 +1,6 @@
-using TaxAssistant.Utils;
+using TaxAssistant.Extensions;
 
-namespace TaxAssistant.External.Llms;
+namespace TaxAssistant.External.Settings;
 
 public record LLMSettings : IHTTPOptions
 {

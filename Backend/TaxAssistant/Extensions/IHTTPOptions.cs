@@ -1,4 +1,4 @@
-namespace TaxAssistant.Utils;
+namespace TaxAssistant.Extensions;
 
 public interface IHTTPOptions
 {

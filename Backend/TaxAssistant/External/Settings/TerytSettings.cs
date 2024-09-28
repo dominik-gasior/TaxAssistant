@@ -1,4 +1,4 @@
-using TaxAssistant.Utils;
+using TaxAssistant.Extensions;
 
 namespace TaxAssistant.External.Settings;
 

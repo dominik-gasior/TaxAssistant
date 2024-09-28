@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace TaxAssistant.Models;
@@ -61,7 +62,7 @@ public record Address
 
 public record IndividualTaxpayer
 {
-    [JsonPropertyName("first_name")] //P_8 | ImiePierwsze | 
+    [JsonPropertyName("first_name")] //P_8 | ImiePierwsze |
     public string FirstName { get; init; }
 
     [JsonPropertyName("last_name")] //P_8 | Nazwisko |

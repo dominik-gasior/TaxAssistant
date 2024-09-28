@@ -1,9 +1,9 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using TaxAssistant.Utils.Exceptions;
+using TaxAssistant.Extensions.Exceptions;
 
-namespace TaxAssistant.Utils;
+namespace TaxAssistant.Extensions;
 
 public static class HttpClientExtensions
 {

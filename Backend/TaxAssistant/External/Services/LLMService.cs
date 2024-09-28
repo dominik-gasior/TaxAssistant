@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
+using TaxAssistant.Extensions;
 using TaxAssistant.External.Clients;
-using TaxAssistant.External.Llms;
 using TaxAssistant.External.Responses;
-using TaxAssistant.Utils;
+using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.External.Services;
 
@@ -13,11 +13,12 @@ public interface ILLMService
 
 public class LLMService : ILLMService
 {
-    private readonly HttpClient client;
+    private readonly LlmClient _llmClient;
     private readonly LLMSettings _llmSettings;
 
-    public LLMService(IOptions<LLMSettings> llmSettings)
+    public LLMService(IOptions<LLMSettings> llmSettings, LlmClient llmClient)
     {
+        _llmClient = llmClient;
         _llmSettings = llmSettings.Value;
     }
 
@@ -42,7 +43,7 @@ public class LLMService : ILLMService
             }
         };
         
-        var response = await client.PostAsJsonAsync<OpenAPIResponse>("chat/completions", requestBody);
+        var response = await _llmClient.GetCompletions(requestBody);
 
         return response!.Choices[0].Message.Content;
     }

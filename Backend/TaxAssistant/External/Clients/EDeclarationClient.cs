@@ -14,10 +14,4 @@ public class EDeclarationClient
         _settings = options.Value ?? throw new ArgumentNullException();
     }
 
-    public HttpClient CreateClient()
-    {
-        _httpClient.BaseAddress = new Uri(_settings.BaseURL);
-
-        return _httpClient;
-    }
 }

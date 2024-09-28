@@ -1,5 +1,7 @@
 using System.Net;
-using TaxAssistant.Utils.Exceptions;
+using TaxAssistant.Extensions.Exceptions;
+
+namespace TaxAssistant.Extensions.Middlewares;
 
 public class ExceptionMiddleware
 {
