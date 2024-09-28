@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Net;
-using System.Threading.Tasks;
+using TaxAssistant.Utils.Exceptions;
 
 public class ExceptionMiddleware
 {
@@ -21,17 +18,27 @@ public class ExceptionMiddleware
         {
             await _next(httpContext);
         }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex.Message);
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.NotFound);
+        }
+        catch (BadRequestException ex)
+        {
+            _logger.LogError(ex.Message);
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
+        }
         catch (Exception ex)
         {
-            _logger.LogError($"Something went wrong: {ex.Message}");
-            await HandleExceptionAsync(httpContext, ex);
+            _logger.LogCritical($"Something went wrong: {ex.Message}");
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.InternalServerError);
         }
     }
 
-    private Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private Task HandleExceptionAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.StatusCode = (int)statusCode;
 
         var result = new
         {
