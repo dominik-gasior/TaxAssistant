@@ -5,20 +5,23 @@ import { ChatCompletion } from "openai/resources/index.mjs"
 
 function useStreamResponse({
   streamCallback,
+  endpoint,
 }: {
   streamCallback: React.Dispatch<React.SetStateAction<string>>
+  endpoint: string
 }) {
   const [responses, setResponses] = useState("")
   const [data, setData] = useState<ChatCompletion | undefined>()
   const [isLoading, setIsLoading] = useState(false)
+  
   const { mutate: startStream } = useMutation({
-    mutationFn: async (messageContent: string) => {
-      const response = await fetch("/api/generate", {
+    mutationFn: async ({ userMessage, isInitialMessage, declarationType }: { userMessage: string, isInitialMessage: boolean, declarationType: string }) => {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: messageContent }),
+        body: JSON.stringify({ userMessage, isInitialMessage, declarationType }),
       })
 
       if (!response.body) {

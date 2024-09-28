@@ -9,13 +9,13 @@ type TLayout = {
 }
 
 export default function Layout({ children }: TLayout) {
+
   return (
     <>
       <Navbar className="font-sans" />
       <main className="min-h-screen font-sans antialiased">
         <div className="grid grid-cols-2 p-6 gap-6">
           {children}
-          <ClientForm />
         </div>
       </main>
       <Footer className="font-sans" />

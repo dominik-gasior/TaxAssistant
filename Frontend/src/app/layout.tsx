@@ -3,6 +3,7 @@ import localFont from "next/font/local"
 
 import "./globals.css"
 
+import { FormProvider } from "@/lib/hooks/use-form"
 import Layout from "@/components/layout"
 
 import QueryProvider from "./providers/query-provider"
@@ -25,11 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${montserrat.variable} antialiased`}
-      >
+      <body className={`${montserrat.variable} antialiased`}>
         <QueryProvider>
-          <Layout>{children}</Layout>
+          <FormProvider>
+            <Layout>{children}</Layout>
+          </FormProvider>
         </QueryProvider>
       </body>
     </html>

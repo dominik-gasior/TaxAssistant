@@ -12,6 +12,7 @@ export default function Step3({
   handlePreviousStep,
   onSave,
 }: TStepMid) {
+  const { formData } = state
   return (
     <form className="flex flex-col gap-5">
       <div className="flex flex-col  gap-4 p-4">

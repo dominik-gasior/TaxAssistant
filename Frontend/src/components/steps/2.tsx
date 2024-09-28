@@ -19,13 +19,24 @@ import {
 } from "../ui/select"
 
 export default function Step2({
-  formData,
+  state,
   handleChange,
   handleNextStep,
   handlePreviousStep,
 }: TStepMid) {
+  const { formData } = state
   return (
     <form className="flex flex-col gap-2 ">
+
+      <div className="flex flex-col gap-2 bg-muted p-4 border-b border-input">
+        {/* FOR ALL address fields check if any of the address fields arent JUST "" and is so tell the user which one is still required */}
+        {Object.entries(formData.address).map(([key, value]) => 
+          { 
+            // formate the keys to not have a _ and to start the first letter with capital but only the first letter of the key 
+            const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+            return value === "" ? <p key={key} className="text-sm text-red-500 mt-1">{`${formattedKey.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} jest obowiązkowe`}</p> : null}
+        )}
+      </div>
       <div className="flex flex-col gap-4 p-4 mb-4 border-b border-input">
         <h1 className="text-2xl font-bold">Dane podatnika</h1>
         <p className="text-sm text-gray-500 mb-4">
@@ -201,9 +212,10 @@ export default function Step2({
           <Select
             name="country"
             required
+            value={formData.address.country}
             onValueChange={(value) => handleChange("address.country", value)}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full invalid:border-red-500 invalid:border-b">
               <SelectValue placeholder="Wybierz kraj" />
             </SelectTrigger>
             <SelectContent>
@@ -213,6 +225,7 @@ export default function Step2({
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
+    
         </div>
 
         <div className="mb-4">
@@ -227,6 +240,7 @@ export default function Step2({
             value={formData.address.province}
             onChange={(e) => handleChange("address.province", e.target.value)}
           />
+        
         </div>
 
         <div className="mb-4">
@@ -241,6 +255,7 @@ export default function Step2({
             value={formData.address.county}
             onChange={(e) => handleChange("address.county", e.target.value)}
           />
+          
         </div>
 
         <div className="mb-4">
@@ -257,6 +272,7 @@ export default function Step2({
               handleChange("address.municipality", e.target.value)
             }
           />
+         
         </div>
 
         <div className="mb-4">
@@ -270,6 +286,7 @@ export default function Step2({
             value={formData.address.street}
             onChange={(e) => handleChange("address.street", e.target.value)}
           />
+       
         </div>
 
         <div className="mb-4">
@@ -286,6 +303,7 @@ export default function Step2({
               handleChange("address.house_number", e.target.value)
             }
           />
+        
         </div>
 
         <div className="mb-4">
@@ -304,6 +322,7 @@ export default function Step2({
               handleChange("address.apartment_number", e.target.value)
             }
           />
+       
         </div>
 
         <div className="mb-4">
@@ -318,6 +337,7 @@ export default function Step2({
             value={formData.address.city}
             onChange={(e) => handleChange("address.city", e.target.value)}
           />
+        
         </div>
 
         <div className="mb-4">
@@ -334,6 +354,7 @@ export default function Step2({
               handleChange("address.postal_code", e.target.value)
             }
           />
+         
         </div>
       </div>
 

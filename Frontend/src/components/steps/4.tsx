@@ -5,9 +5,10 @@ import { TFormData, TStepFinal } from "@/app/types/steps"
 import { Button } from "../ui/button"
 
 export default function Step4({
-  formData,
+  state,
   handlePreviousStep,
 }: TStepFinal) {
+  const { formData } = state
   const renderAddress = (address: TFormData["address"]) => {
     return (
       <>

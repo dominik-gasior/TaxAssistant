@@ -1,0 +1,11 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad20907d_002Df4e3_002D4748_002D9fd4_002Df8c49dcfab21/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::15A6AC71-70D7-44F8-83EB-43B6A50C8A38::net8.0::TaxAssistant.Tests.Services.FormServiceTests.FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b0239532_002D232d_002D49ff_002D955e_002D7b0836a199a4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::15A6AC71-70D7-44F8-83EB-43B6A50C8A38::net8.0::TaxAssistant.Tests.Services.FormServiceTests.FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
