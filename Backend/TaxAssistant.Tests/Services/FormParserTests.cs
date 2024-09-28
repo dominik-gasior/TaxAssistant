@@ -1,12 +1,13 @@
 using System.Globalization;
 using TaxAssistant.Models;
+using TaxAssistant.Services;
 using VerifyXunit;
 
 namespace TaxAssistant.Tests.Services;
 
-public class FormServiceTests
+public class FormParserTests
 {
-    private readonly FormService _sut = new();
+    private readonly FormParser _sut = new();
     
     [Fact]
     public async Task FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType()
