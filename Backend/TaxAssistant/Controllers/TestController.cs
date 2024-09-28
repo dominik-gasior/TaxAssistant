@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TaxAssistant.External.Clients;
 
 namespace TaxAssistant.Controllers;
 
@@ -6,9 +7,16 @@ namespace TaxAssistant.Controllers;
 [Route("api/test")]
 public class TestController : ControllerBase
 {
-    [HttpGet]
-    public IActionResult Get()
+    private readonly ILlmClient _llmClient;
+
+    public TestController(ILlmClient llmClient)
     {
-        return Ok("Test");
+        _llmClient = llmClient;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        return Ok(await _llmClient.GenerateMessageAsync("Hello", "text"));
     }
 }
