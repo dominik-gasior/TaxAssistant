@@ -6,6 +6,6 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b0239532_002D232d_002D49ff_002D955e_002D7b0836a199a4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::15A6AC71-70D7-44F8-83EB-43B6A50C8A38::net8.0::TaxAssistant.Tests.Services.FormServiceTests.FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::15A6AC71-70D7-44F8-83EB-43B6A50C8A38::net8.0::TaxAssistant.Tests.Services.FormParserTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
