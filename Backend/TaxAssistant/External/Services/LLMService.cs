@@ -16,10 +16,9 @@ public class LLMService : ILLMService
     private readonly HttpClient client;
     private readonly LLMSettings _llmSettings;
 
-    public LLMService(IOptions<LLMSettings> llmSettings, LLMClient client)
+    public LLMService(IOptions<LLMSettings> llmSettings)
     {
         _llmSettings = llmSettings.Value;
-        this.client = client.CreateClient();
     }
 
     public async Task<string> GenerateMessageAsync(string prompt, string type = "json_object")
@@ -42,7 +41,7 @@ public class LLMService : ILLMService
                 type
             }
         };
-
+        
         var response = await client.PostAsJsonAsync<OpenAPIResponse>("chat/completions", requestBody);
 
         return response!.Choices[0].Message.Content;

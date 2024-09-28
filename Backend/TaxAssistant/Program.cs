@@ -1,4 +1,5 @@
 using TaxAssistant.Declarations;
+using TaxAssistant.External.Services;
 using TaxAssistant.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.RegisterClients(builder.Configuration);
+
+builder.Services.AddScoped<ILLMService, LLMService>();
+builder.Services.ConfigureTerytClient(builder.Configuration);
+builder.Services.ConfigureEDeclarationClient(builder.Configuration);
+builder.Services.ConfigureLlmClient(builder.Configuration);
 builder.Services.RegisterDeclarations();
 
 var app = builder.Build();

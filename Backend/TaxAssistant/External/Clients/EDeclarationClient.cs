@@ -3,17 +3,18 @@ using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.External.Clients;
 
-public class EDeclarationClient : TaxAssistantClient
+public class EDeclarationClient
 {
     private readonly EDeclarationSettings _settings;
+    private readonly HttpClient _httpClient;
 
-    public EDeclarationClient(IOptions<EDeclarationSettings> options, HttpClient client)
-    : base(options, client)
+    public EDeclarationClient(IOptions<EDeclarationSettings> options, HttpClient httpClient)
     {
+        _httpClient = httpClient;
         _settings = options.Value ?? throw new ArgumentNullException();
     }
 
-    public override HttpClient CreateClient()
+    public HttpClient CreateClient()
     {
         _httpClient.BaseAddress = new Uri(_settings.BaseURL);
 
