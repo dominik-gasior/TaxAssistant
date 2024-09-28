@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using TaxAssistant.Utils.Exceptions;
 
 namespace TaxAssistant.Utils;
 
@@ -17,11 +18,12 @@ public static class HttpClientExtensions
             MediaTypeNames.Application.Json
         );
 
-        var response = await client.PostAsJsonAsync(requestUri, stringContent);
+        var response = await client.PostAsync(requestUri, stringContent);
 
         if (!response.IsSuccessStatusCode)
         {
-            return default(T?);
+            var error = await response.Content.ReadAsStringAsync();
+            throw new BadRequestException(error);
         }
 
         return await response.Content.ReadFromJsonAsync<T>();

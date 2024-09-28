@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Deklaracja xmlns="http://crd.gov.pl/wzor/2023/12/13/13064/">
+  <Naglowek>
+    <KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PCC-3</KodFormularza>
+    <WariantFormularza>6</WariantFormularza>
+    <CelZlozenia poz="P_6">1</CelZlozenia>
+    <Data poz="P_4">{{}}</Data>
+    <KodUrzedu>{{}}</KodUrzedu>
+  </Naglowek>
+  <Podmiot1 rola="Podatnik">
+    <OsobaNiefizyczna>
+      <NIP>{{}}</NIP>
+      <PelnaNazwa>{{}}</PelnaNazwa>
+      <SkroconaNazwa>{{}}</SkroconaNazwa>
+    </OsobaNiefizyczna>
+    <AdresZamieszkaniaSiedziby rodzajAdresu="RAD">
+      <AdresPol>
+        <KodKraju>{{}}</KodKraju>
+        <Wojewodztwo>{{}}</Wojewodztwo>
+        <Powiat>{{}}</Powiat>
+        <Gmina>{{}}</Gmina>
+        <Ulica>{{}}</Ulica>
+        <NrDomu>{{}}</NrDomu>
+        <NrLokalu>{{}}</NrLokalu>
+        <Miejscowosc>{{}}</Miejscowosc>
+        <KodPocztowy>{{}}</KodPocztowy>
+      </AdresPol>
+    </AdresZamieszkaniaSiedziby>
+  </Podmiot1>
+  <PozycjeSzczegolowe>
+    <P_7>{{}}</P_7>
+    <P_20>{{}}</P_20>
+    <P_21>{{}}</P_21>
+    <P_22>{{}}</P_22>
+    <P_23>{{}}</P_23>
+    <P_24>{{}}</P_24>
+    <P_25>{{}}</P_25>
+    <P_26>{{}}</P_26>
+    <P_27>{{}}</P_27>
+    <P_46>{{}}</P_46>
+    <P_53>{{}}</P_53>
+    <P_62>{{}}</P_62>
+  </PozycjeSzczegolowe>
+  <Pouczenia>{{}}</Pouczenia>
+</Deklaracja>
