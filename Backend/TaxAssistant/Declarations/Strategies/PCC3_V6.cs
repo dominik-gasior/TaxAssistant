@@ -1,3 +1,4 @@
+using System.Text.Json;
 using TaxAssistant.Declarations.Strategies.Interfaces;
 using TaxAssistant.External.Services;
 using TaxAssistant.Prompts;
@@ -35,17 +36,62 @@ public class PCC3_V6 : IDeclarationStrategy
     własności,
     
     • podwyższenia kapitału w spółce mającej osobowość prawną.
+    
+    Deklaracji nie składa się, gdy:
+    
+    • czynność cywilnoprawna jest dokonywana w formie aktu notarialnego i podatek jest
+    pobierany przez notariusza (płatnika podatku),
+    
+    • podatnik składa zbiorczą deklarację w sprawie podatku od czynności cywilnoprawnych
+    (PCC-4),
+    
+    • podatnikiem jest:
+    
+    ◦ kupujący na własne potrzeby sprzęt rehabilitacyjny, wózki inwalidzkie, motorowery,
+    motocykle lub samochody osobowe – jeśli ma: orzeczenie o znacznym albo
+    umiarkowanym stopniu niepełnosprawności (nieważne, jakie ma schorzenie), o
+    orzeczenie o lekkim stopniu niepełnosprawności w związku ze schorzeniami narządów
+    ruchu.
+    
+    ◦ organizacja pożytku publicznego – jeśli dokonuje czynności cywilnoprawnych tylko w
+    związku ze swoją nieodpłatną działalnością pożytku publicznego.
+    
+    ◦ jednostka samorządu terytorialnego,
+    
+    ◦ Skarb Państwa,
+    
+    ◦ Agencja Rezerw Materiałowych,
+    
+    • korzysta się ze zwolnienia od podatku, gdy:
+    
+    ◦ kupowane są obce waluty,
+    
+    ◦ kupowane są i zamieniane waluty wirtualne,
+    
+    ◦ kupowane są rzeczy ruchome – i ich wartość rynkowa nie przekracza 1 000 zł,
+    
+    ◦ pożyczane jest nie więcej niż 36 120 zł (liczą się łącznie pożyczki z ostatnich 5 lat od
+    jednej osoby) – jeśli jest to pożyczka od bliskiej rodziny, czyli od: małżonka, dzieci,
+    wnuków, prawnuków, rodziców, dziadków, pradziadków, pasierbów, pasierbic,
+    rodzeństwa, ojczyma, macochy, zięcia, synowej, teściów,
+    
+    ◦ pożyczane są pieniądze od osób spoza bliskiej rodziny – jeśli wysokość pożyczki nie
+    przekracza 1 000 zł.
+    Deklarację składa się tylko w przypadkach umów, których przedmiotem są rzeczy i prawa majątkowe
+    (majątek), znajdujące się w Polsce. A jeśli są za granicą – to tylko jeśli ich nabywca mieszka albo ma
+    siedzibę w Polsce i zawarł umowę w Polsce. W przypadku umowy zamiany wystarczy, że w Polsce jest
+    jeden z zamienianych przedmiotów.
     """;
 
     public string DeclarationType { get; } = "PCC3";
 
     public async Task<bool> ClassifyAsync(string userMessage)
     {
-         var classificationPrompt = PromptsProvider.DeclarationClassification(userMessage);
-         var response = await _llmService.GenerateMessageAsync(classificationPrompt, "text");
+         var classificationPrompt = PromptsProvider.DeclarationClassification(userMessage, Description);
+         var response = await _llmService.GenerateMessageAsync(classificationPrompt);
 
-         var classificationResult = response.Equals("TAK", StringComparison.CurrentCultureIgnoreCase);
+         var classificationResult = JsonSerializer.Deserialize<DeclarationClassification>(response);
 
-         return classificationResult;
+         return classificationResult!.IsGoodMatch;
     }
 }

@@ -37,7 +37,7 @@ public class DeclarationService : IDeclarationService
                 return new GetCorrectDeclarationTypeResponse
                 (
                     strategy.DeclarationType,
-                    $"Twoja sprawa moze zostac zreallizowana po przez formularz {strategy.DeclarationType} Czy chcesz kontynuowac?"
+                    $"Twoja sprawa moze zostac zrealizowana przy pomocy formularza {strategy.DeclarationType}. Czy chcesz kontynuowac?"
                 );
             }
         }
@@ -45,7 +45,7 @@ public class DeclarationService : IDeclarationService
         return  new GetCorrectDeclarationTypeResponse
         (
             "OTHER", 
-            "Niestety obecnie nie jestesmy w stanie przetworzyc podanego typu wniosku, sprobuj ponownie pozniej"
+            "Niestety obecnie nie jestesmy w stanie przetworzyc podanego typu wniosku. Sprobuj ponownie pozniej."
         );
     }
     

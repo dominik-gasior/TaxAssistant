@@ -2,16 +2,28 @@ namespace TaxAssistant.Prompts;
 
 public static class PromptsProvider
 {
-    public static string DeclarationClassification(string message)
+    public static string DeclarationClassification(string message, string opisDeklaracji)
     {
         return 
-        $"""
+        $$"""
+           Z podanej waidomosci przygotuj filtr w JSONie:
            Na podstawie opisu przeznaczenia deklaracji podatkowej sklasyfikuj czy podane przez uzytkownika informacje podlegaja podanej deklaracji
-           W odpowiedzi napisz TAK lub NIE 
            
            WIADOMOSC UZYTKOWNIKA
-           '''{message}'''
+           '''{{message}}'''
            KONIEC WIADOMOSCI
+           
+           OPIS DEKLARACJI
+           '''{{opisDeklaracji}}'''
+           KONIEC OPISU DEKLRACJI
+           
+           Odpowiedz używając poniższego formatu:
+        
+           {
+               "isGoodMatch": true
+           }
+          
+          Przygotuj filtr na podstawie wiadomosci:
         """;
     }
     
