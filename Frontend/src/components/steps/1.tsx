@@ -5,10 +5,11 @@ import { TStepStart } from "@/app/types/steps"
 import { Button } from "../ui/button"
 
 export default function Step1({
-  formData,
+  state,
   handleChange,
   handleNextStep,
 }: TStepStart) {
+  const { formData } = state
   return (
     <form className="flex flex-col gap-5">
       <div className="flex flex-col gap-4 p-4">
@@ -31,6 +32,7 @@ export default function Step1({
             className="w-full p-2 border rounded invalid:border-red-500 invalid:border-b"
             required
             value={formData.date_of_action || ""}
+            
             onChange={(e) => handleChange("date_of_action", e.target.value)}
           />
           {!formData.date_of_action && (
