@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Deklaracja xmlns="http://crd.gov.pl/wzor/2023/12/13/13064/">
 	<Naglowek>
-		<KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z"
-					   wersjaSchemy="1-0E">PCC-3</KodFormularza>
+		<KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PCC-3</KodFormularza>
 		<WariantFormularza>6</WariantFormularza>
 		<CelZlozenia poz="P_6">1</CelZlozenia>
 		<Data poz="P_4">2024-07-29</Data>

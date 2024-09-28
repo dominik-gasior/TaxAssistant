@@ -10,11 +10,11 @@ public record FormModel
     [JsonPropertyName("office_name")] //P_5 | KodUrzedu | map this to code
     public string OfficeName { get; init; }
     
-    [JsonPropertyName("entity_submitting_action")] //P_7 | PozycjeSzczegolowe | enum
-    public string EntitySubmittintAction { get; init; }
+    [JsonPropertyName("entity_submitting_action")] //P_7 | PozycjeSzczegolowe | 1-5
+    public int EntitySubmittintAction { get; init; }
     
     [JsonPropertyName("taxpayer_type")] //P_8 | OsobaNiefizyczna lub OsobaFizyczna | enum
-    public string TaxpayerType { get; init; }
+    public string TaxpayerType { get; init; } //"individual" | "company"
 
     [JsonPropertyName("address")] 
     public Address Address { get; init; }
@@ -22,8 +22,8 @@ public record FormModel
     [JsonPropertyName("action_description")] //P_23 | PozycjeSzczegolowe | sekcja C max 3500 znakow
     public string ActionDescription { get; init; }
     
-    [JsonPropertyName("amount")] //P_26 | PozycjeSzczegolowe | 
-    public string Amount { get; init; }
+    [JsonPropertyName("amount")] //P_26 | PozycjeSzczegolowe | min 1
+    public int Amount { get; init; }
     
     [JsonPropertyName("taxpayer_data")] //Unia
     public object TaxpayerData { get; init; }
