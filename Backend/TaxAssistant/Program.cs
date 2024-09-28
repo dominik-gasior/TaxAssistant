@@ -14,7 +14,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.RegisterClients(builder.Configuration);
         builder.Services.AddScoped<IDeclarationService, DeclarationService>();
-        
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
@@ -24,6 +24,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseAuthorization();
 
