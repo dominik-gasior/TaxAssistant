@@ -6,7 +6,7 @@ using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.Utils;
 
-public static class ClinetConfigurations
+public static class ClientConfigurations
 {
     public static void ConfigureTerytClient(this IServiceCollection services, IConfiguration config)
     {
