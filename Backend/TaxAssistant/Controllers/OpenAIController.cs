@@ -4,12 +4,12 @@ using TaxAssistant.External.Services;
 namespace TaxAssistant.Controllers;
 
 [ApiController]
-[Route("api/test")]
-public class TestController : ControllerBase
+[Route("api/openai")]
+public class OpenAIController : ControllerBase
 {
     private readonly ILLMService lmmService;
 
-    public TestController(ILLMService lmmService)
+    public OpenAIController(ILLMService lmmService)
     {
         this.lmmService = lmmService;
     }
