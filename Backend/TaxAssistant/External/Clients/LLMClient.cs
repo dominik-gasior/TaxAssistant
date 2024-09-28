@@ -7,14 +7,12 @@ namespace TaxAssistant.External.Clients;
 
 public class LLMClient : TaxAssistantClient
 {
-    private readonly HttpClient _httpClient;
     private readonly LLMSettings _llmSettings;
 
-    public LLMClient(IOptions<IHTTPOptions> options, HttpClient client)
+    public LLMClient(IOptions<LLMSettings> options, HttpClient client)
     : base(options, client)
     {
-        _httpClient = client;
-        _llmSettings = options.Value as LLMSettings ?? throw new ArgumentNullException();
+        _llmSettings = options.Value ?? throw new ArgumentNullException();
     }
 
     public override HttpClient CreateClient()
