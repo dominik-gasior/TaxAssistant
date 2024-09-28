@@ -3,4 +3,4 @@
 .vscode
 .idea
 */.idea
-./TaxAssistant/appsettings.Development.json
+*.Development.json

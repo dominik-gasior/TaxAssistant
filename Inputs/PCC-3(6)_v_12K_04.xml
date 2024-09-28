@@ -4,42 +4,42 @@
     <KodFormularza kodSystemowy="PCC-3 (6)" kodPodatku="PCC" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PCC-3</KodFormularza>
     <WariantFormularza>6</WariantFormularza>
     <CelZlozenia poz="P_6">1</CelZlozenia>
-    <Data poz="P_4">2024-07-29</Data>
-    <KodUrzedu>0271</KodUrzedu>
+    <Data poz="P_4">{{}}</Data>
+    <KodUrzedu>{{}}</KodUrzedu>
   </Naglowek>
   <Podmiot1 rola="Podatnik">
     <OsobaNiefizyczna>
-      <NIP>6751789422</NIP>
-      <PelnaNazwa>SEGMENTATION FAULT ADRIAN FRANCZAK</PelnaNazwa>
-      <SkroconaNazwa>SFAF</SkroconaNazwa>
+      <NIP>{{}}</NIP>
+      <PelnaNazwa>{{}}</PelnaNazwa>
+      <SkroconaNazwa>{{}}</SkroconaNazwa>
     </OsobaNiefizyczna>
     <AdresZamieszkaniaSiedziby rodzajAdresu="RAD">
       <AdresPol>
-        <KodKraju>PL</KodKraju>
-        <Wojewodztwo>ŚLĄSKIE</Wojewodztwo>
-        <Powiat>M. KATOWICE</Powiat>
-        <Gmina>M. KATOWICE</Gmina>
-        <Ulica>ALPEJSKA</Ulica>
-        <NrDomu>6</NrDomu>
-        <NrLokalu>66</NrLokalu>
-        <Miejscowosc>KATOWICE</Miejscowosc>
-        <KodPocztowy>66-666</KodPocztowy>
+        <KodKraju>{{}}</KodKraju>
+        <Wojewodztwo>{{}}</Wojewodztwo>
+        <Powiat>{{}}</Powiat>
+        <Gmina>{{}}</Gmina>
+        <Ulica>{{}}</Ulica>
+        <NrDomu>{{}}</NrDomu>
+        <NrLokalu>{{}}</NrLokalu>
+        <Miejscowosc>{{}}</Miejscowosc>
+        <KodPocztowy>{{}}</KodPocztowy>
       </AdresPol>
     </AdresZamieszkaniaSiedziby>
   </Podmiot1>
   <PozycjeSzczegolowe>
-    <P_7>3</P_7>
-    <P_20>1</P_20>
-    <P_21>2</P_21>
-    <P_22>1</P_22>
-    <P_23>Sprzedałem auto</P_23>
-    <P_24>0</P_24>
-    <P_25>0</P_25>
-    <P_26>12000</P_26>
-    <P_27>240</P_27>
-    <P_46>240</P_46>
-    <P_53>240</P_53>
-    <P_62>1</P_62>
+    <P_7>{{}}</P_7>
+    <P_20>{{}}</P_20>
+    <P_21>{{}}</P_21>
+    <P_22>{{}}</P_22>
+    <P_23>{{}}</P_23>
+    <P_24>{{}}</P_24>
+    <P_25>{{}}</P_25>
+    <P_26>{{}}</P_26>
+    <P_27>{{}}</P_27>
+    <P_46>{{}}</P_46>
+    <P_53>{{}}</P_53>
+    <P_62>{{}}</P_62>
   </PozycjeSzczegolowe>
-  <Pouczenia>1</Pouczenia>
+  <Pouczenia>{{}}</Pouczenia>
 </Deklaracja>
