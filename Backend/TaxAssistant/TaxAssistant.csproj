@@ -14,4 +14,10 @@
     <Folder Include="External/Requests/" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Models/Templates/PCC-3(6).xml">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

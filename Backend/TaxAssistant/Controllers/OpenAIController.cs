@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Services;
 using TaxAssistant.External.Services;
+using TaxAssistant.Utils;
 
 namespace TaxAssistant.Controllers;
 
@@ -11,7 +12,7 @@ public class OpenAIController : ControllerBase
 {
     private readonly ILLMService _llmService;
     private readonly IDeclarationService _declarationService;
-    
+
     public OpenAIController(ILLMService llmService, IDeclarationService declarationService)
     {
         _llmService = llmService;
@@ -22,10 +23,9 @@ public class OpenAIController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var message = await _llmService.GenerateMessageAsync("Hello", "text");
-        
         return Ok(message);
     }
-    
+
     [HttpGet]
     [Route("get-declaration-file")]
     public async Task<IActionResult> GetDeclarationFileAsync([FromQuery] Guid declarationId)

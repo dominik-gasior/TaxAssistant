@@ -43,7 +43,6 @@ public class ExceptionMiddleware
         var result = new
         {
             StatusCode = context.Response.StatusCode,
-            Message = "Wystąpił wewnętrzny błąd serwera. Skontaktuj się z administratorem.",
             Details = exception.Message
         };
 
