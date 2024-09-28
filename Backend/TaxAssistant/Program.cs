@@ -40,6 +40,6 @@ app.UseAuthorization();
 app.UseCors("Front");
 app.MapControllers();
 
-app.MapGet("/", () => "Hello from TaxAssistant");
+app.MapGet("/", () => "Hello from TaxAssistant").WithTags("HealthCheck");
 
 app.Run();

@@ -1,6 +1,6 @@
 namespace TaxAssistant.Models;
 
-public record UserData
+public record ConversationData
 {
     public required string Id { get; init; }
     public required ChatLog ChatLog { get; init; }
