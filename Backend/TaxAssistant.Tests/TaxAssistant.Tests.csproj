@@ -31,10 +31,4 @@
       <ProjectReference Include="..\TaxAssistant\TaxAssistant.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="Services\FormServiceTests.FormService_ShouldParseIndividualXml_ForIndividualTaxpayerType.verified.txt">
-        <DependentUpon>FormParserTests.cs</DependentUpon>
-      </None>
-    </ItemGroup>
-
 </Project>
