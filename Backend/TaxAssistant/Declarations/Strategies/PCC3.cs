@@ -5,11 +5,11 @@ using TaxAssistant.Prompts;
 
 namespace TaxAssistant.Declarations.Strategies;
 
-public class PCC3_V6 : IDeclarationStrategy
+public class PCC3 : IDeclarationStrategy
 {
     private readonly ILLMService _llmService;
     
-    public PCC3_V6(ILLMService llmService)
+    public PCC3(ILLMService llmService)
     {
         _llmService = llmService;
     }

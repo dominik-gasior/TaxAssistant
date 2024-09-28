@@ -9,7 +9,7 @@ public static class Extensions
     public static IServiceCollection RegisterDeclarations(this IServiceCollection services)
     {
         services.AddScoped<IDeclarationService, DeclarationService>();
-        services.AddScoped<IDeclarationStrategy, PCC3_V6>();
+        services.AddScoped<IDeclarationStrategy, PCC3>();
 
         return services;
     }
