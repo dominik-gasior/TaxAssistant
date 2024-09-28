@@ -15,6 +15,15 @@ builder.Services.ConfigureEDeclarationClient(builder.Configuration);
 builder.Services.ConfigureLlmClient(builder.Configuration);
 builder.Services.RegisterDeclarations();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Front",
+        b => b
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -28,7 +37,7 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
-
+app.UseCors("Front");
 app.MapControllers();
 
 app.Run();
