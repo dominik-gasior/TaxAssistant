@@ -37,7 +37,7 @@ public class DeclarationService : IDeclarationService
                 return new GetCorrectDeclarationTypeResponse
                 (
                     strategy.DeclarationType,
-                    $"Twoja sprawa moze zostac zrealizowana przy pomocy formularza {strategy.DeclarationType}. Czy chcesz kontynuowac?"
+                    await _llmService.GenerateMessageAsync(PromptsProvider.DetectedDeclarationFormat(userMessage, strategy.DeclarationType), "text")
                 );
             }
         }
@@ -45,14 +45,19 @@ public class DeclarationService : IDeclarationService
         return  new GetCorrectDeclarationTypeResponse
         (
             "OTHER", 
-            "Niestety obecnie nie jestesmy w stanie przetworzyc podanego typu wniosku. Sprobuj ponownie pozniej."
+            await _llmService.GenerateMessageAsync(PromptsProvider.NoMatchingDeclarationType(userMessage), "text")
         );
     }
     
     public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage)
     {
+        var questionsCheck = await _llmService.GenerateMessageAsync
+        (
+            PromptsProvider.QuestionsResponseChecker(userMessage)
+        );
+        
         //var prompt = PromptsProvider.QuestionsClassification();
-
+        
         var answeredQuestionsIds = new List<int>
         {
             
@@ -64,11 +69,11 @@ public class DeclarationService : IDeclarationService
 
         if (nextQuestions.Count == 0)
         {
-            return await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(), "text");
+            return await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
         }
         
         var firstMissingQuestion = nextQuestions.First().Value;
-        var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(firstMissingQuestion), "text");
+        var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(userMessage, firstMissingQuestion), "text");
 
         return questionToTheHuman;
     }

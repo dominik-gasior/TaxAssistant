@@ -2,11 +2,42 @@ namespace TaxAssistant.Prompts;
 
 public static class PromptsProvider
 {
+    private const string LanguageInstruction = "Odpowiedz musi byc przetlumaczona na jezyk WIADOMOOSCI UZYTKOWNIKA";
+    
+    public static string QuestionsResponseChecker(string message)
+    {
+        return 
+            $$"""
+                 Z podanej wiadomosci przygotuj filtry w JSONie:
+                 Filtry nie moga zawierac innych pol niz te przedstawione ponizej, w momencie gdy nie 
+                 jestes w stanie okreslic wartosci filtru wartosc musi wynosic null
+                 
+                 WIADOMOSC UZYTKOWNIKA
+                 '''{{message}}'''
+                 KONIEC WIADOMOSCI
+                 
+                 Odpowiedz używając poniższego formatu:
+              
+                 {
+                     "kodKraju": "PL",
+                     "ulica": "3 Maja",
+                     "pierwszeImie": "Jan",
+                     "nazwisko": "Kowalski",
+                     "PESEL": "12345678901",
+                     "zaakceptowanoPouczenie": true,
+                     "dataUrodzenia": "1954-12-18"
+                 }
+                
+                Przygotuj filtry na podstawie wiadomosci:
+              """;
+    }
+
+    
     public static string DeclarationClassification(string message, string opisDeklaracji)
     {
         return 
         $$"""
-           Z podanej waidomosci przygotuj filtr w JSONie:
+           Z podanej wiadomosci przygotuj filtr w JSONie:
            Na podstawie opisu przeznaczenia deklaracji podatkowej sklasyfikuj czy podane przez uzytkownika informacje podlegaja podanej deklaracji
            
            WIADOMOSC UZYTKOWNIKA
@@ -32,11 +63,12 @@ public static class PromptsProvider
         return "";
     }
     
-    public static string DeclarationIsReadyToConfirm()
+    public static string DeclarationIsReadyToConfirm(string message)
     {
         return
-        """
+        $$"""
         Wygeneruj wiadomosc skierowana do uzytkownika
+        {{LanguageInstruction}}
         
         Treść wiadomości:
         Wskazanie, że wszystkie pola w formularzu zostały wypełnione.
@@ -52,12 +84,47 @@ public static class PromptsProvider
         """;
     }
     
-    public static string NextQuestion(string nextQuestion)
+    public static string NextQuestion(string nextQuestion, string message)
     {
         return
         $"""
         Twoja rola jest zapytanie sie uzytkownika o podana kwestie
+        WIADOMOSC UZYTKOWNIKA
+        '''{message}'''
+        KONIEC WIADOMOSCI
+        
         {nextQuestion}
         """;
+    }
+
+    public static string DetectedDeclarationFormat(string typDeklaracji, string message)
+    {
+        return 
+        $"""
+         Poinformuj uzytkownika ze jego sprawa moze zostac zrealizowana przy pomocy deklaracji {typDeklaracji}
+         {LanguageInstruction}
+         Zapytaj sie uzytkownika czy chce kontynuowac
+         
+         WIADOMOSC UZYTKOWNIKA
+         '''{message}'''
+         KONIEC WIADOMOSCI
+         
+         Odpowiedz: Wiadomosc skierowana do uzytkownika
+         """;
+    }
+    
+    public static string NoMatchingDeclarationType(string message)
+    {
+        return 
+            $"""
+             Poinformuj uzytkownika ze jego sprawa nie jest obecnie obslugiwana przez czat, oraz ze moze sprobowac w przyszlosci
+             {LanguageInstruction}
+             
+             WIADOMOSC UZYTKOWNIKA
+             '''{message}'''
+             KONIEC WIADOMOSCI
+
+             Odpowiedz: Wiadomosc skierowana do uzytkownika
+             """;
     }
 }
