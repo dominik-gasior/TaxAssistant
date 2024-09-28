@@ -1,5 +1,6 @@
 using TaxAssistant.External.Clients;
 using TaxAssistant.External.Llms;
+using TaxAssistant.External.Services;
 using TaxAssistant.External.Settings;
 
 namespace TaxAssistant.Utils;
@@ -15,6 +16,8 @@ public static class Extensions
         services.AddHttpClient<LLMClient>();
         services.AddHttpClient<EDeclarationClient>();
         services.AddHttpClient<TerytClient>();
+
+        services.AddScoped<ILLMService, LLMService>();
 
         return services;
     }
