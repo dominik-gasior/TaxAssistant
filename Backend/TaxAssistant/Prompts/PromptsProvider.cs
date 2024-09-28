@@ -23,15 +23,31 @@ public static class PromptsProvider
                  
                  Odpowiedz używając poniższego formatu:
               
-                 {
-                     "kodKraju": "PL",
-                     "ulica": "3 Maja",
-                     "pierwszeImie": "Jan",
-                     "nazwisko": "Kowalski",
-                     "PESEL": "12345678901",
-                     "zaakceptowanoPouczenie": true,
-                     "dataUrodzenia": "1954-12-18"
-                 }
+                  {
+                    date_of_action: "2024-01-01",
+                    office_name: "Urzad Skarbowy w Zawierciu",
+                    entity_submitting_action: true,
+                    taxpayer_type: "individual",
+                    taxpayer_data: {
+                      first_name: "Jan",
+                      last_name: "Kowalski",
+                      pesel: "12345678900",
+                      date_of_birth: "2000-01-01",
+                    },
+                    address: {
+                      country: "PL",
+                      province: "Slask",
+                      county: "Zawiercianski",
+                      municipality: "",
+                      street: "3 Maja",
+                      house_number: "12",
+                      apartment_number: "2",
+                      city: "Ogrodzieniec",
+                      postal_code: "42-440",
+                    },
+                    action_description: "Zakup auta",
+                    amount: 1000,
+                  }
                 
                 Przygotuj filtry na podstawie wiadomosci:
               """;
