@@ -15,13 +15,13 @@ public class TaxAssistantController : ControllerBase
     }
     
     [HttpPost("ask-tax-assistant")]
-    public async Task<IActionResult> GenerateLlmResponse([FromBody] GenerateLlmRequest request, [FromQuery] string declarationType)
+    public async Task<IActionResult> GenerateLlmResponse([FromBody] GenerateLlmRequest request)
     {
         if (request.IsInitialMessage)
         {
             return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage));
         }
         
-        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(declarationType, request.UserMessage));
+        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(request.DeclarationType, request.UserMessage));
     }
 }

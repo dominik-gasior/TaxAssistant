@@ -3,7 +3,12 @@ namespace TaxAssistant.Prompts;
 public static class PromptsProvider
 {
     private const string LanguageInstruction = "Odpowiedz musi byc przetlumaczona na jezyk WIADOMOOSCI UZYTKOWNIKA";
-    
+
+    private const string BlockChangingTheTopicInstruction =
+        """
+        Jesli WIADOMOOSC UZYTKOWNIKA nie dotyczy podatkow odpowiedz ze mozesz odpowiedziec na pytania tylko z nimi zwiazane
+        """;
+        
     public static string QuestionsResponseChecker(string message)
     {
         return 

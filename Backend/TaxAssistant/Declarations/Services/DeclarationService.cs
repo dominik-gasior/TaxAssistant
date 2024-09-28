@@ -11,7 +11,7 @@ namespace TaxAssistant.Declarations.Services;
 public interface IDeclarationService
 {
     Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync(string userMessage);
-    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage);
+    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage);
     Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile);
 }
 
@@ -49,7 +49,7 @@ public class DeclarationService : IDeclarationService
         );
     }
     
-    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage)
+    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage)
     {
         var questionsCheck = await _llmService.GenerateMessageAsync
         (
