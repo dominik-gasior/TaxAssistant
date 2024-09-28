@@ -7,14 +7,9 @@ import Layout from "@/components/layout"
 
 import QueryProvider from "./providers/query-provider"
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-})
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const montserrat = localFont({
+  src: "./fonts/Montserrat.ttf",
+  variable: "--font-montserrat",
   weight: "100 900",
 })
 
@@ -31,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${montserrat.variable} antialiased`}
       >
         <QueryProvider>
           <Layout>{children}</Layout>
