@@ -14,7 +14,7 @@ public class UpdateFormController : ControllerBase
     }
 
     [HttpPut("update-form")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
+    public async Task<IActionResult> Put([FromBody] FormFile formFile)
     {
         throw new NotImplementedException();
     }

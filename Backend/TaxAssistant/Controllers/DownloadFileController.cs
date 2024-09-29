@@ -19,7 +19,7 @@ public class DownloadFileController : ControllerBase
     }
 
     [HttpGet("download-file")]
-    public async Task<IActionResult> GetDeclarationFileAsync(string conversationId)
+    public async Task<IActionResult> Get(string conversationId)
     {
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
         if (conversation is null) return NotFound();

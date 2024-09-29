@@ -18,7 +18,7 @@ public class SendFormController : ControllerBase
     }
 
     [HttpPost("send-form")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormModel model)
+    public async Task<IActionResult> Post([FromBody] FormModel model)
     {
         var file = _formService.Generate("Templates/PCC-3(6).xml", model);
         await _eDeclarationClient.SendForm(file);
