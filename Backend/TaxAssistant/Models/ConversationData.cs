@@ -9,8 +9,8 @@ public record ConversationData
 
 public record Message
 {
-    public int TimeStamp { get; init; }
-    public string Role { get; init; }
-    public string Content { get; init; }
+    public required int TimeStamp { get; init; }
+    public required string Role { get; init; }
+    public required string Content { get; init; }
 }
 
