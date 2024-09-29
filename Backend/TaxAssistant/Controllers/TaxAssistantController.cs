@@ -30,7 +30,7 @@ public class TaxAssistantController : ControllerBase
         var userRequestTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (request.IsInitialMessage)
         {
-            var nextQuestionGenerationResponse = await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage);
+            var nextQuestionGenerationResponse = await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage, conversationId);
             await DumpFlow(conversationId, request, nextQuestionGenerationResponse, userRequestTimestamp);
             return Ok(nextQuestionGenerationResponse);
         }
@@ -38,7 +38,8 @@ public class TaxAssistantController : ControllerBase
         var result = await _declarationService.GenerateQuestionAboutNextMissingFieldAsync
         (
             request.DeclarationType,
-            request.UserMessage
+            request.UserMessage,
+            conversationId
         );
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
         if (conversation is null) await DumpFlow(conversationId, request, result, userRequestTimestamp);

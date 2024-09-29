@@ -5,7 +5,7 @@ namespace TaxAssistant.Services;
 
 public class FormModelValidator
 {
-    public FormModel UpdateFormModel(FormModel oldModel, FormModel newModel)
+    public static FormModel UpdateFormModel(FormModel oldModel, FormModel newModel)
     {
         var valid = ValidateForm(newModel);
 
@@ -45,7 +45,7 @@ public class FormModelValidator
         return result;
     }
     
-    private IndividualTaxpayer UpdateIndividualTaxpayer(IndividualTaxpayer oldIndividual, IndividualTaxpayer newIndividual, List<string> valid) => new()
+    private static IndividualTaxpayer UpdateIndividualTaxpayer(IndividualTaxpayer oldIndividual, IndividualTaxpayer newIndividual, List<string> valid) => new()
     {
         FirstName = valid.Contains(nameof(oldIndividual.FirstName)) ? newIndividual.FirstName : oldIndividual.FirstName,
         LastName = valid.Contains(nameof(oldIndividual.LastName)) ? newIndividual.LastName : oldIndividual.LastName,
@@ -53,14 +53,14 @@ public class FormModelValidator
         DateOfBirth = valid.Contains(nameof(oldIndividual.DateOfBirth)) ? newIndividual.DateOfBirth : oldIndividual.DateOfBirth,
     };
     
-    private CompanyTaxpayer UpdateCompanyTaxpayer(CompanyTaxpayer oldCompany, CompanyTaxpayer newCompany, List<string> valid) => new()
+    private static CompanyTaxpayer UpdateCompanyTaxpayer(CompanyTaxpayer oldCompany, CompanyTaxpayer newCompany, List<string> valid) => new()
     {
         FullName = valid.Contains(nameof(oldCompany.FullName)) ? newCompany.FullName : oldCompany.FullName,
         ShortName = valid.Contains(nameof(oldCompany.ShortName)) ? newCompany.ShortName : oldCompany.ShortName,
         NIP = valid.Contains(nameof(oldCompany.NIP)) ? newCompany.NIP : oldCompany.NIP,
     };
 
-    private Address UpdateAddress(Address oldAddress, Address newAddress, List<string> valid) => new()
+    private static Address UpdateAddress(Address oldAddress, Address newAddress, List<string> valid) => new()
     {
         Country = valid.Contains(nameof(oldAddress.Country)) ? newAddress.Country : oldAddress.Country,
         Province = valid.Contains(nameof(oldAddress.Province)) ? newAddress.Province : oldAddress.Province,
@@ -73,7 +73,7 @@ public class FormModelValidator
         City = valid.Contains(nameof(oldAddress.City)) ? newAddress.City : oldAddress.City
     };
 
-    public List<string> ValidateForm(FormModel formModel)
+    public static List<string> ValidateForm(FormModel formModel)
     {
         //TODO: officeName
         var validProps = new List<string>();
@@ -101,7 +101,7 @@ public class FormModelValidator
         return validProps;
     }
 
-    private List<string> ValidateCompanyTaxpayer(object? companyObject)
+    private static List<string> ValidateCompanyTaxpayer(object? companyObject)
     {
         var companyData = JsonSerializer.Deserialize<CompanyTaxpayer>(JsonSerializer.Serialize(companyObject));
         if (companyData is null) return [];
@@ -113,7 +113,7 @@ public class FormModelValidator
         return validProps;
     }
     
-    private List<string> ValidateIndividualTaxpayer(object? individualObject)
+    private static List<string> ValidateIndividualTaxpayer(object? individualObject)
     {
         var individualData = JsonSerializer.Deserialize<IndividualTaxpayer>(JsonSerializer.Serialize(individualObject));
         if (individualData is null) return [];
@@ -127,7 +127,7 @@ public class FormModelValidator
         return validProps;
     }
     
-    private List<string> ValidateAddress(Address address)
+    private static List<string> ValidateAddress(Address address)
     {
         var validProps = new List<string>();
         if (!string.IsNullOrWhiteSpace(address.Country)) validProps.Add(nameof(address.Country));
