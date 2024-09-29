@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
+import { nanoid } from "nanoid"
 
 import { useForm } from "@/lib/hooks/use-form"
+import { useLocalStorage } from "@/lib/hooks/use-local-storage"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,26 +20,71 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import ClientForm from "@/components/client-form"
 import Step1 from "@/components/steps/1"
 import Step2 from "@/components/steps/2"
 import Step3 from "@/components/steps/3"
 import Step4 from "@/components/steps/4"
 
-import { HandleChangeFunction } from "../types/steps"
-import ClientForm from "@/components/client-form"
-import { nanoid } from "nanoid"
+import { HandleChangeFunction, TFormMessage } from "../types/steps"
+import { useQuery } from "@tanstack/react-query"
 
 export default function Page({ params }: { params: { type: string } }) {
   const { state, dispatch } = useForm()
   const { currentStep, totalSteps } = state
-  const nanoId = nanoid()
+  const [storedNanoId, setStoredNanoId] = useLocalStorage("newChatId", nanoid())
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const [queryEnabled, setQueryEnabled] = useState(false)
+  
 
   useEffect(() => {
-      if (!state.nanoId) {
-        dispatch({ type: "SET_NANO_ID", payload: nanoId })
+    if (!state.nanoId) {
+      const userAgreed = window.confirm("Czy chcesz użyć poprzedniego czatu?")
+      if (userAgreed) {
+        dispatch({ type: "SET_NANO_ID", payload: storedNanoId })
+        setQueryEnabled(true)
+      } else {
+        const newNanoId = nanoid()
+        setStoredNanoId(newNanoId)
+        dispatch({ type: "SET_NANO_ID", payload: newNanoId })
       }
-    }, [dispatch, nanoId, state.nanoId])
-    
+    }
+  }, [dispatch, setStoredNanoId, state.nanoId, storedNanoId])
+
+  
+  const { data: restoredChat, status } = useQuery({
+    queryKey: ["restoreChat", storedNanoId],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL!}/restore-chat?conversationId=${storedNanoId}`
+      )
+      if (!response.ok) throw new Error("Failed to restore chat")
+      return response.json()
+    },
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: false,
+    enabled: queryEnabled,
+    staleTime: Infinity, // Prevent auto-refetching
+    gcTime: Infinity, // Keep the data cached indefinitely
+  })
+
+
+  useEffect(() => {
+    if (isInitialLoad && restoredChat && status === "success") {
+      dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
+
+      // Update messages state with the chat log
+      const messages = restoredChat.messages.map((message: TFormMessage) => ({
+        content: message.content,
+        role: message.role,
+        timestamp: new Date(Number(message.timestamp) * 1000).toISOString(),
+      }))
+      dispatch({ type: "SET_MESSAGES", payload: messages })
+
+      setIsInitialLoad(false)
+    }
+  }, [restoredChat, dispatch, status, isInitialLoad])
 
   const handleNextStep = () => dispatch({ type: "NEXT_STEP" })
   const handlePreviousStep = () => dispatch({ type: "PREVIOUS_STEP" })
@@ -47,12 +95,13 @@ export default function Page({ params }: { params: { type: string } }) {
       payload: { name, value },
     })
   }
+  const { back } = useRouter()
 
   return (
     <>
       <div className="max-w-2xl mx-auto  w-full overflow-auto border-r border-input">
-        <div className="flex gap-4 items-center py-2 text-lg ">
-          <Button onClick={handlePreviousStep}>
+        <div className="flex gap-4 items-center py-2 text-lg px-4">
+          <Button onClick={back}>
             <ChevronLeft size={16} /> Wroc
           </Button>
 
@@ -128,7 +177,7 @@ export default function Page({ params }: { params: { type: string } }) {
           />
         )}
       </div>
-      <ClientForm declarationType={params.type} id={nanoId} />
+      <ClientForm declarationType={params.type} id={storedNanoId} />
     </>
   )
 }

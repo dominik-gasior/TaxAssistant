@@ -3,7 +3,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { TFormMessage } from "@/app/types/steps"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Wand2 } from "lucide-react"
 import { nanoid } from "nanoid"
@@ -27,67 +26,18 @@ export default function ClientForm({
 }) {
   const [isInitialMessage, setIsInitialMessage] = useState(true)
   const { state, dispatch } = useForm()
-  const [_, setNextQuestion] = useState("")
   const [sentence, setSentence] = useState("")
-  const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const [storedChatId, setNewChatId] = useLocalStorage("newChatId", id)
+  const [_, setNewChatId] = useLocalStorage("newChatId", id)
 
   useEffect(() => {
     setNewChatId(id)
   })
 
-  // Fetch chat history on initial load if a conversation ID exists
-  const { data: restoredChat, status } = useQuery({
-    queryKey: ["restoreChat", storedChatId],
-    queryFn: async () => {
-      if (!storedChatId) return null
-      const response = await fetch(
-        `http://192.168.137.19:49234/restore-chat?conversationId=${storedChatId}`
-      )
-      if (!response.ok) throw new Error("Failed to restore chat")
-      return response.json()
-    },
-    refetchOnWindowFocus: false,
-    retry: false,
-    refetchOnMount: false,
-    enabled: !!storedChatId && isInitialLoad, //
-    staleTime: Infinity, // Prevent auto-refetching
-    gcTime: Infinity, // Keep the data cached indefinitely
-  })
-
-  useEffect(() => {
-    if (isInitialLoad) {
-      if (restoredChat && status === "success") {
-        dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
-
-        // Update messages state with the chat log
-        const messages = restoredChat.chatLog.map((message: TFormMessage) => ({
-          id: message.timestamp.toString(), // Using timestamp as a unique id
-          content: message.content,
-          role: message.role,
-          timestamp: new Date(Number(message.timestamp) * 1000).toISOString(),
-        }))
-        dispatch({ type: "SET_MESSAGES", payload: messages })
-
-        // Set the next question as the last assistant message, if any
-        const lastAssistantMessage = restoredChat.chatLog
-          .filter((msg: TFormMessage) => msg.role.toLowerCase() === "assistant")
-          .pop()
-        if (lastAssistantMessage) {
-          setNextQuestion(lastAssistantMessage.content)
-        }
-
-        setIsInitialMessage(false)
-      }
-      setIsInitialLoad(false)
-    }
-  }, [restoredChat, dispatch, status, isInitialLoad])
-
   // Use useQuery for the initial message
   const { mutate: sendInitialMessage, isPending } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        `http://192.168.137.19:49234/ask-tax-assistant/${id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL!}/ask-tax-assistant/${id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -105,7 +55,6 @@ export default function ClientForm({
       dispatch({
         type: "ADD_MESSAGE",
         payload: {
-          id: nanoid(), // Generate a unique ID for the new message
           content: sentence,
           role: "user", // Assuming the role is 'user' for the user message
           timestamp: new Date().toISOString(), // Current timestamp
@@ -113,13 +62,11 @@ export default function ClientForm({
       })
 
       if (data.formData) {
-        console.log(data.formData, "data.formData exsists")
 
         // push the data.message into the state.messages array
         dispatch({
           type: "ADD_MESSAGE",
           payload: {
-            id: nanoid(), // Generate a unique ID for the new message
             content: data.message,
             role: "assistant", // Assuming the role is 'assistant' for the response
             timestamp: new Date().toISOString(), // Current timestamp
@@ -131,9 +78,11 @@ export default function ClientForm({
           payload: { formData: data.formData },
         })
 
-        setNextQuestion(data.message)
+        
         setIsInitialMessage(false)
       }
+      dispatch({ type: "SET_ERROR", payload: data.message })
+
       // toast.error("Nie udało się pobrać danych")
     },
     onError: (error) => {
@@ -152,16 +101,15 @@ export default function ClientForm({
   const { formRef, onKeyDown } = useEnterSubmit()
 
   const { messagesRef, scrollRef, visibilityRef } = useScrollAnchor()
-  console.log(state)
 
   return (
     <div
-      className="group w-full grid-cols-subgrid grid-rows-[1fr,auto] h-[calc(100dvh_-_120.8px)] overflow-hidden pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
+      className="group w-full relative grid-cols-subgrid grid-rows-[1fr,auto] h-[calc(100dvh_-_120.8px)] pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
       ref={scrollRef}
     >
-      <div className="h-[100dvh] overflow-auto pb-[200px] pt-4 md:pt-10">
+      <div className="h-full  pb-[200px] pt-4 md:pt-10">
         {state.messages.length ? (
-          <div className="relative mx-auto max-w-2xl px-4">
+          <div className="mx-auto overflow-auto h-[calc(100dvh_-_120.8px)] max-w-2xl px-4">
             {state.messages
               .sort(
                 (a, b) =>
@@ -169,7 +117,7 @@ export default function ClientForm({
                   new Date(b.timestamp).getTime()
               )
               .map((message, index) => (
-                <div key={message.id}>
+                <div key={message.timestamp}>
                   <div className="grid">
                     <div className="text-xs text-muted-foreground flex flex-row justify-between items-center">
                       <span>{message.role}</span>
@@ -189,7 +137,7 @@ export default function ClientForm({
           <EmptyScreen />
         )}
         <div className="w-full h-px mb-auto" ref={visibilityRef} />
-        <div className="relative bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80">
+        <div className="absolute bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80">
           <div className="mx-auto sm:max-w-2xl sm:px-4">
             <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
               <form

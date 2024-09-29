@@ -10,7 +10,6 @@ export type TFormState = {
     messages: TFormMessage[];
 };
 export type TFormMessage = {
-    id: string
     content: string
     role: "user" | "assistant"
     timestamp: string
