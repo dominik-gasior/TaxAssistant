@@ -42,8 +42,9 @@ public class DownloadFileController : ControllerBase
         var fileName = $"declaration_{timestamp}.xml";
 
         using var stream = new MemoryStream();
-        await using var reader = new StreamWriter(stream);
-        await reader.WriteAsync(xml);
+        await using var writer = new StreamWriter(stream);
+        await writer.WriteAsync(xml);
+        await writer.FlushAsync();
         
         var logData = JsonSerializer.Serialize(formModel);
         Console.WriteLine($"Wygenerowano plik XML dla formularza [{logData}]");

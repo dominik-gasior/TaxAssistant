@@ -1,6 +1,12 @@
 "use client"
 
-import React, { createContext, Dispatch, useContext, useReducer } from "react"
+import React, {
+  createContext,
+  Dispatch,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react"
 import { TFormState } from "@/app/types/steps"
 
 import { updateNestedObject } from "../utils"
@@ -9,6 +15,7 @@ const initialFormState: TFormState = {
   currentStep: 1,
   totalSteps: 4,
   sameDataAsResponse: false,
+  nanoId: null,
   formData: {
     date_of_action: "",
     office_name: "",
@@ -47,11 +54,32 @@ type Action =
   | { type: "SET_ERROR"; payload: string }
   | { type: "SET_MESSAGES"; payload: any }
   | { type: "RESET_FORM" }
+  | { type: "SET_NANO_ID"; payload: string }
+  | {
+      type: "ADD_MESSAGE"
+      payload: {
+        id: string
+        content: string
+        role: "user" | "assistant"
+        timestamp: string
+      }
+    }
+//   add message
+
 const reducer = (state: TFormState, action: Action): TFormState => {
   switch (action.type) {
+    case "ADD_MESSAGE":
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
+      }
+
+    case "SET_NANO_ID":
+      return {
+        ...state,
+        nanoId: action.payload,
+      }
     case "RESET_FORM":
-        console.log("invoike kurwa reset pizdo");
-        
       localStorage.removeItem("newChatId") // AND delete the localstorage id
 
       return { ...initialFormState, messages: [] }
@@ -92,7 +120,10 @@ const reducer = (state: TFormState, action: Action): TFormState => {
     case "SET_RESPONSE_DATA":
       return {
         ...state,
-        formData: action.payload,
+        formData: {
+          ...state.formData,
+          ...action.payload.formData,
+        },
         sameDataAsResponse: false,
       }
     case "NEXT_STEP":
@@ -115,7 +146,9 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialFormState)
-  console.log(state)
+  useEffect(() => {
+    console.log(state)
+  }, [state])
 
   return (
     <FormContext.Provider value={{ state, dispatch }}>

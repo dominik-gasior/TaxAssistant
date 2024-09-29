@@ -13,10 +13,9 @@ export default function Step1({
   handleNextStep,
 }: TStepStart) {
   const { formData } = state
-  console.log(formData.date_of_action)
   const { mutate, isPending } = useFormMutation()
   const handleSubmit = () => {
-    mutate()
+    mutate(state.nanoId)
   }
 
   return (

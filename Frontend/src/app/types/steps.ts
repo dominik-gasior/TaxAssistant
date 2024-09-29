@@ -2,6 +2,7 @@ export type TFormState = {
     currentStep: number;
     totalSteps: number;
     sameDataAsResponse: boolean;
+    nanoId: string | null;
     formData: TFormData
     error: string;
     messages: any[];
@@ -9,41 +10,41 @@ export type TFormState = {
 
 export type TFormData = {
     // Step 1
-    date_of_action: string; // DateOnly in format YYYY-MM-DD
-    office_name: string;
-    entity_submitting_action: 1 | 2 | 3 | 4 | 5;
-    taxpayer_type: 'individual' | 'company';
-    taxpayer_data: TIndividualTaxpayer | TCompanyTaxpayer;
+    date_of_action: string | null; // DateOnly in format YYYY-MM-DD
+    office_name: string | null;
+    entity_submitting_action: 1 | 2 | 3 | 4 | 5 | null;
+    taxpayer_type: 'individual' | 'company' | null;
+    taxpayer_data: TIndividualTaxpayer | TCompanyTaxpayer | null;
 
     // Step 2
     address: {
-        country: string;
-        province: string;
-        county: string;
+        country: string | null;
+        province: string | null;
+        county: string | null;
         municipality: string;
-        street?: string;
-        house_number: string;
-        apartment_number?: string;
-        city: string;
-        postal_code: string;
+        street?: string | null;
+        house_number: string | null;
+        apartment_number?: string | null;
+        city: string | null;
+        postal_code: string | null;
     };
 
     // Step 3
-    action_description: string;
-    amount: number;
+    action_description: string | null;
+    amount: number | null;
 };
 
 export type TIndividualTaxpayer = {
-    first_name: string;
-    last_name: string;
-    pesel: string;
-    date_of_birth: string; // DateOnly in format YYYY-MM-DD
+    first_name: string | null;
+    last_name: string | null;
+    pesel: string | null;
+    date_of_birth: string | null; // DateOnly in format YYYY-MM-DD
 };
 
 export type TCompanyTaxpayer = {
-    full_name: string;
-    short_name: string;
-    nip: string;
+    full_name: string | null;
+    short_name: string | null;
+    nip: string | null;
 };
 
 export type HandleChangeFunction = (name: string, value: any) => void;
@@ -52,7 +53,6 @@ export type TStepStart = {
     state: TFormState
     handleChange: HandleChangeFunction
     handleNextStep: () => void
-    saving
 }
 export type TStepMid = {
     state: TFormState
