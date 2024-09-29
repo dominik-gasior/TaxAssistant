@@ -1,7 +1,15 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace TaxAssistant.Models;
+
+public record FormModelWrapper
+{
+    [JsonPropertyName("form")]
+    public FormModel FormModel { get; set; }
+    
+    [JsonPropertyName("questions_about_missing_fields")]
+    public string [] Questions { get; set; }
+}
 
 public record FormModel
 {

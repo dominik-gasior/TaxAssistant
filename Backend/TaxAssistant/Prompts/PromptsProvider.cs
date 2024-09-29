@@ -9,7 +9,7 @@ public static class PromptsProvider
         Jesli WIADOMOOSC UZYTKOWNIKA nie dotyczy podatkow odpowiedz ze mozesz odpowiedziec na pytania tylko z nimi zwiazane
         """;
         
-    public static string QuestionsResponseChecker(string message)
+    public static string QuestionsResponseChecker(string message, string declarationType)
     {
         return 
             $$"""
@@ -17,6 +17,9 @@ public static class PromptsProvider
                  Filtry nie moga zawierac innych pol niz te przedstawione ponizej, w momencie gdy nie 
                  jestes w stanie okreslic wartosci filtru wartosc musi wynosic null
                  
+                 Jesli ktores z pol w JSONie nie jest uzupelnione dodaj pytanie o jego podanie do tablicy questions_about_missing_fields
+                 
+                 Typ wypelnianej deklaracji to {{declarationType}}
                  WIADOMOSC UZYTKOWNIKA
                  '''{{message}}'''
                  KONIEC WIADOMOSCI
@@ -30,6 +33,9 @@ public static class PromptsProvider
                  
                  Odpowiedz używając poniższego formatu:
               
+              {
+                "questions_about_missing_fields": ["Jaka jest twoja data urodzenia"],
+                "form":
                   {
                     date_of_action: "2024-01-01",
                     office_name: "Urzad Skarbowy w Zawierciu",
@@ -39,7 +45,7 @@ public static class PromptsProvider
                       first_name: "Jan",
                       last_name: "Kowalski",
                       pesel: "12345678900",
-                      date_of_birth: "2000-01-01",
+                      date_of_birth: "",
                     },
                     address: {
                       country: "PL",
@@ -55,6 +61,8 @@ public static class PromptsProvider
                     action_description: "Zakup auta",
                     amount: 1000,
                   }
+              }
+                  
                 
                 Przygotuj filtry na podstawie wiadomosci:
               """;
@@ -112,19 +120,6 @@ public static class PromptsProvider
         """;
     }
     
-    public static string NextQuestion(string nextQuestion, string message)
-    {
-        return
-        $"""
-        Twoja rola jest zapytanie sie uzytkownika o podana kwestie
-        WIADOMOSC UZYTKOWNIKA
-        '''{message}'''
-        KONIEC WIADOMOSCI
-        
-        {nextQuestion}
-        """;
-    }
-
     public static string DetectedDeclarationFormat(string typDeklaracji, string message)
     {
         return 

@@ -1,8 +1,6 @@
 using System.Text.Json;
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
-using TaxAssistant.Declarations.Questions;
 using TaxAssistant.Declarations.Strategies.Interfaces;
 using TaxAssistant.External.Services;
 using TaxAssistant.Models;
@@ -56,32 +54,18 @@ public class DeclarationService : IDeclarationService
     {
         var formDataExtraction = await _llmService.GenerateMessageAsync
         (
-            PromptsProvider.QuestionsResponseChecker(userMessage)
+            PromptsProvider.QuestionsResponseChecker(userMessage, declarationType)
         );
 
-        var formModel = JsonSerializer.Deserialize<FormModel>(formDataExtraction);
+        var formModelWrapper = JsonSerializer.Deserialize<FormModelWrapper>(formDataExtraction);
         
-        //var prompt = PromptsProvider.QuestionsClassification();
-        
-        var answeredQuestionsIds = new List<int>
-        {
-            
-        };
-
-        var strategy = _strategies.First(s => s.DeclarationType.Equals(declarationType, StringComparison.InvariantCultureIgnoreCase));
-        
-        var nextQuestions = QuestionsProvider.GetNotAnsweredQuestions(strategy.QuestionsPool, answeredQuestionsIds.ToArray());
-
-        if (nextQuestions.Count == 0)
+        if (!formModelWrapper!.Questions.Any())
         {
             var message = await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
             
-            return new NextQuestionGenerationResponse(declarationType, formModel, message);
+            return new NextQuestionGenerationResponse(declarationType, formModelWrapper.FormModel, message);
         }
-        
-        var firstMissingQuestion = nextQuestions.First().Value;
-        var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(userMessage, firstMissingQuestion), "text");
 
-        return new NextQuestionGenerationResponse(declarationType, formModel, questionToTheHuman);
+        return new NextQuestionGenerationResponse(declarationType, formModelWrapper.FormModel, formModelWrapper.Questions.First());
     }
 }
