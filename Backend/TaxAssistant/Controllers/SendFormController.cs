@@ -6,7 +6,6 @@ using TaxAssistant.Services;
 namespace TaxAssistant.Controllers;
 
 [ApiController]
-[Route("api/send-form")]
 public class SendFormController : ControllerBase
 {
     private readonly IFormService _formService;
@@ -18,7 +17,7 @@ public class SendFormController : ControllerBase
         _eDeclarationClient = eDeclarationClient;
     }
 
-    [HttpPost]
+    [HttpPost("send-form")]
     public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormModel model)
     {
         var file = _formService.Generate("Templates/PCC-3(6).xml", model);

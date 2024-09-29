@@ -7,7 +7,6 @@ using TaxAssistant.Services;
 namespace TaxAssistant.Controllers;
 
 [ApiController]
-[Route("api/download-file")]
 public class DownloadFileController : ControllerBase
 {
     private readonly ConversationReader _conversationReader;
@@ -19,7 +18,7 @@ public class DownloadFileController : ControllerBase
         _formService = formService;
     }
 
-    [HttpGet]
+    [HttpGet("download-file")]
     public async Task<IActionResult> GetDeclarationFileAsync(string conversationId)
     {
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
