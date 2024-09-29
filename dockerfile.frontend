@@ -9,7 +9,7 @@ RUN npm install --include=dev
 COPY ./Frontend .
 RUN npm run build
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_BASE_URL=http://localhost:8000
+ENV NEXT_PUBLIC_BASE_URL=http://dotnet_api:8000
 
 EXPOSE 80
 EXPOSE 443

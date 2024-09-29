@@ -6,6 +6,8 @@ using TaxAssistant.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

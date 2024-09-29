@@ -23,6 +23,7 @@ public class ChatController : ControllerBase
         if (conversation is not null)
         {
             var logData = JsonSerializer.Serialize(conversation);
+            Console.WriteLine(logData);
             Console.WriteLine($"Znaleziono dane konwersacji o ID [{conversationId}], [{conversation}]");
             
             return Ok(conversation);
