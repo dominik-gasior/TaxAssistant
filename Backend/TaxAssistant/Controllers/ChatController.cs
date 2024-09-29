@@ -13,7 +13,7 @@ public class ChatController : ControllerBase
         _conversationReader = conversationReader;
     }
 
-    [HttpGet("restore-chat")]
+    [HttpGet("restore-chat/{conversationId}}")]
     public async Task<IActionResult> Get(string conversationId)
     {
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
