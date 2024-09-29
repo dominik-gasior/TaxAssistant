@@ -1,4 +1,11 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev"
 
-export default nextConfig;
+if (process.env.NEXT_PUBLIC_ENV === "development") {
+  setupDevPlatform({
+    persist: true,
+  })
+}
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+export default nextConfig
