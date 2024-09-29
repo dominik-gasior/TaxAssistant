@@ -6,7 +6,7 @@ public static class PromptsProvider
 
     private const string BlockChangingTheTopicInstruction =
         """
-        Jesli WIADOMOOSC UZYTKOWNIKA nie dotyczy podatkow odpowiedz ze mozesz odpowiedziec na pytania tylko z nimi zwiazane
+        Jesli WIADOMOOSC UZYTKOWNIKA nie dotyczy podatkow staraj sie w odpowiedzi naprowadzic uzytkownika na ten temat
         """;
         
     public static string QuestionsResponseChecker(string message, string declarationType)
@@ -105,6 +105,7 @@ public static class PromptsProvider
         $$"""
         Wygeneruj wiadomosc skierowana do uzytkownika
         {{LanguageInstruction}}
+        {{BlockChangingTheTopicInstruction}}
         
         Treść wiadomości:
         Wskazanie, że wszystkie pola w formularzu zostały wypełnione.
@@ -123,9 +124,10 @@ public static class PromptsProvider
     public static string DetectedDeclarationFormat(string typDeklaracji, string message)
     {
         return 
-        $"""
+        $$"""
          Poinformuj uzytkownika ze jego sprawa moze zostac zrealizowana przy pomocy deklaracji {typDeklaracji}
-         {LanguageInstruction}
+         {{LanguageInstruction}}
+         {{BlockChangingTheTopicInstruction}}
          Zapytaj sie uzytkownika czy chce kontynuowac
          
          WIADOMOSC UZYTKOWNIKA
@@ -139,9 +141,10 @@ public static class PromptsProvider
     public static string Summarize(string userMessage, string botMessage)
     {
         return 
-            $"""
+            $$"""
              Stworz wiadomosc z polaczenia dwoch ponizej, poinformuj uzytkownika ktora ktora deklaracja jest odpowiednia dla jego sprawy ogranicz odpowiedz do 1 zdania
-             {LanguageInstruction}
+             {{LanguageInstruction}}
+             {{BlockChangingTheTopicInstruction}}
 
              WIADOMOSC UZYTKOWNIKA
              '''{userMessage}'''
@@ -158,9 +161,10 @@ public static class PromptsProvider
     public static string NoMatchingDeclarationType(string message)
     {
         return 
-            $"""
+            $$"""
              Poinformuj uzytkownika ze jego sprawa nie jest obecnie obslugiwana przez czat, oraz ze moze sprobowac w przyszlosci
              {LanguageInstruction}
+             {{BlockChangingTheTopicInstruction}}
              
              WIADOMOSC UZYTKOWNIKA
              '''{message}'''

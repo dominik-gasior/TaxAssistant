@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
 using TaxAssistant.Models;
@@ -41,9 +42,12 @@ public class DownloadFileController : ControllerBase
         var fileName = $"declaration_{timestamp}.xml";
 
         using var stream = new MemoryStream();
-        using var reader = new StreamWriter(stream);
+        await using var reader = new StreamWriter(stream);
         await reader.WriteAsync(xml);
-
+        
+        var logData = JsonSerializer.Serialize(formModel);
+        Console.WriteLine($"Wygenerowano plik XML dla formularza [{logData}]");
+        
         return new DeclarationFileResponse(stream.ToArray(), fileName);
     }
 }

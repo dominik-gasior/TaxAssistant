@@ -87,6 +87,8 @@ public class PCC3 : IDeclarationStrategy
 
     public async Task<bool> ClassifyAsync(string userMessage)
     {
+         Console.WriteLine("Sprawdzenie czy wersja deklaracji PCC3 jest odpowiednia da sprawy");
+         
          var classificationPrompt = PromptsProvider.DeclarationClassification(userMessage, Description);
          var response = await _llmService.GenerateMessageAsync(classificationPrompt);
 
