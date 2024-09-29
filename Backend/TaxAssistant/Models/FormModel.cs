@@ -8,7 +8,7 @@ public record FormModelWrapper
     public FormModel FormModel { get; set; }
     
     [JsonPropertyName("questions_about_missing_fields")]
-    public string [] Questions { get; set; }
+    public string[] Questions { get; set; }
 }
 
 public record FormModel
@@ -20,13 +20,13 @@ public record FormModel
     public string? OfficeName { get; init; }
 
     [JsonPropertyName("entity_submitting_action")] //P_7 | PozycjeSzczegolowe | 1-5
-    public int? EntitySubmittintAction { get; init; }
+    public int? EntitySubmittingAction { get; init; }
 
     [JsonPropertyName("taxpayer_type")] //P_8 | OsobaNiefizyczna lub OsobaFizyczna | enum
     public string? TaxpayerType { get; init; } //"individual" | "company"
 
     [JsonPropertyName("address")]
-    public Address? Address { get; init; }
+    public Address Address { get; init; } = new();
 
     [JsonPropertyName("action_description")] //P_23 | PozycjeSzczegolowe | sekcja C max 3500 znakow
     public string? ActionDescription { get; init; }

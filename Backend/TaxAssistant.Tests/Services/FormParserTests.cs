@@ -25,7 +25,7 @@ public class FormParserTests
             },
             Amount = 1000,
             DateOfAction = DateOnly.Parse("2000-12-28", CultureInfo.InvariantCulture),
-            EntitySubmittintAction = 5,
+            EntitySubmittingAction = 5,
             OfficeName = "OfficeName",
             Address = new Address
             {
