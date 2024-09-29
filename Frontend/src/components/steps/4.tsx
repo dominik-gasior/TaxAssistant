@@ -82,6 +82,7 @@ export default function Step4({
       <div className="flex gap-4 mt-4 bg-muted p-4 border-t border-input">
         <Button
           type="button"
+          variant='outline'
           className="font-bold"
           onClick={handlePreviousStep}
         >
@@ -97,6 +98,24 @@ export default function Step4({
         >
           Zatwierdź i wyślij
         </Button>
+        
+        <Button
+          type="button"
+          className="font-bold ml-auto"
+          onClick={() => {
+            const conversationId = state.nanoId; // Assuming nanoId is the conversationId
+            if (conversationId) {
+              window.open(`${process.env.NEXT_PUBLIC_BASE_URL}/download-file/${conversationId}`, '_blank');
+            } else {
+              console.error('Conversation ID is not available');
+              // You might want to show an error message to the user here
+            }
+          }}
+        >
+          Pobierz plik
+        </Button>
+
+        
       </div>
     </div>
   )

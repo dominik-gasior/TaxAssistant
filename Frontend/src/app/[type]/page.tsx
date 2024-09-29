@@ -49,14 +49,14 @@ export default function Page({ params }: { params: { type: string } }) {
         dispatch({ type: "SET_NANO_ID", payload: newNanoId })
       }
     }
-  }, [dispatch, setStoredNanoId, state.nanoId, storedNanoId])
+  }, [])
 
   
   const { data: restoredChat, status } = useQuery({
     queryKey: ["restoreChat", storedNanoId],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL!}/restore-chat?conversationId=${storedNanoId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL!}/restore-chat/${storedNanoId}`
       )
       if (!response.ok) throw new Error("Failed to restore chat")
       return response.json()
@@ -72,7 +72,7 @@ export default function Page({ params }: { params: { type: string } }) {
 
   useEffect(() => {
     if (isInitialLoad && restoredChat && status === "success") {
-      dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
+      dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formData })
 
       // Update messages state with the chat log
       const messages = restoredChat.messages.map((message: TFormMessage) => ({

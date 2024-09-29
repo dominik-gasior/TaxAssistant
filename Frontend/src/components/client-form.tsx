@@ -62,7 +62,6 @@ export default function ClientForm({
       })
 
       if (data.formData) {
-
         // push the data.message into the state.messages array
         dispatch({
           type: "ADD_MESSAGE",
@@ -78,10 +77,14 @@ export default function ClientForm({
           payload: { formData: data.formData },
         })
 
-        
         setIsInitialMessage(false)
       }
-      dispatch({ type: "SET_ERROR", payload: data.message })
+      if (data.declarationType === "OTHER") {
+        dispatch({ type: "SET_ERROR", payload: data.message })
+      } else {
+        dispatch({ type: "SET_ERROR", payload: data.message })
+
+      }
 
       // toast.error("Nie udało się pobrać danych")
     },
