@@ -7,25 +7,26 @@ public class FormModelValidator
 {
     public static FormModel UpdateFormModel(FormModel oldModel, FormModel newModel)
     {
+        if (newModel.TaxpayerType is null) newModel = newModel with { TaxpayerType = oldModel.TaxpayerType };
         var valid = ValidateForm(newModel);
 
         var address = UpdateAddress(oldModel.Address, newModel.Address, valid);
-        IndividualTaxpayer individualTaxpayer = new();
-        CompanyTaxpayer companyTaxpayer = new();
+        Taxpayer taxpayer = new();
+        Taxpayer companyTaxpayer = new();
         if (newModel.TaxpayerType == "individual")
         {
-            var newIndividualTaxpayer = JsonSerializer.Deserialize<IndividualTaxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new IndividualTaxpayer();
+            var newIndividualTaxpayer = JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new Taxpayer();
             var oldIndividualTaxpayer = oldModel.TaxpayerType == "individual"
-                ? JsonSerializer.Deserialize<IndividualTaxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new IndividualTaxpayer()
-                : new IndividualTaxpayer();
-            individualTaxpayer = UpdateIndividualTaxpayer(oldIndividualTaxpayer, newIndividualTaxpayer, valid);
+                ? JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(oldModel.TaxpayerData)) ?? new Taxpayer()
+                : new Taxpayer();
+            taxpayer = UpdateIndividualTaxpayer(oldIndividualTaxpayer, newIndividualTaxpayer, valid);
         }
         if (newModel.TaxpayerType == "company")
         {
-            var newIndividualTaxpayer = JsonSerializer.Deserialize<CompanyTaxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new CompanyTaxpayer();
+            var newIndividualTaxpayer = JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new Taxpayer();
             var oldIndividualTaxpayer = oldModel.TaxpayerType == "company"
-                ? JsonSerializer.Deserialize<CompanyTaxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new CompanyTaxpayer()
-                : new CompanyTaxpayer();
+                ? JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(newModel.TaxpayerData)) ?? new Taxpayer()
+                : new Taxpayer();
             companyTaxpayer = UpdateCompanyTaxpayer(oldIndividualTaxpayer, newIndividualTaxpayer, valid);
         }
         
@@ -38,22 +39,22 @@ public class FormModelValidator
             OfficeName = valid.Contains(nameof(oldModel.OfficeName)) ? newModel.OfficeName : oldModel.OfficeName,
             TaxpayerType = valid.Contains(nameof(oldModel.TaxpayerType)) ? newModel.TaxpayerType : oldModel.TaxpayerType,
             Address = address,
-            TaxpayerData = newModel.TaxpayerType == "individual" ? individualTaxpayer : companyTaxpayer
+            TaxpayerData = newModel.TaxpayerType == "individual" ? taxpayer : companyTaxpayer
             
         };
 
         return result;
     }
     
-    private static IndividualTaxpayer UpdateIndividualTaxpayer(IndividualTaxpayer oldIndividual, IndividualTaxpayer newIndividual, List<string> valid) => new()
+    private static Taxpayer UpdateIndividualTaxpayer(Taxpayer old, Taxpayer @new, List<string> valid) => new()
     {
-        FirstName = valid.Contains(nameof(oldIndividual.FirstName)) ? newIndividual.FirstName : oldIndividual.FirstName,
-        LastName = valid.Contains(nameof(oldIndividual.LastName)) ? newIndividual.LastName : oldIndividual.LastName,
-        Pesel = valid.Contains(nameof(oldIndividual.Pesel)) ? newIndividual.Pesel : oldIndividual.Pesel,
-        DateOfBirth = valid.Contains(nameof(oldIndividual.DateOfBirth)) ? newIndividual.DateOfBirth : oldIndividual.DateOfBirth,
+        FirstName = valid.Contains(nameof(old.FirstName)) ? @new.FirstName : old.FirstName,
+        LastName = valid.Contains(nameof(old.LastName)) ? @new.LastName : old.LastName,
+        Pesel = valid.Contains(nameof(old.Pesel)) ? @new.Pesel : old.Pesel,
+        DateOfBirth = valid.Contains(nameof(old.DateOfBirth)) ? @new.DateOfBirth : old.DateOfBirth,
     };
     
-    private static CompanyTaxpayer UpdateCompanyTaxpayer(CompanyTaxpayer oldCompany, CompanyTaxpayer newCompany, List<string> valid) => new()
+    private static Taxpayer UpdateCompanyTaxpayer(Taxpayer oldCompany, Taxpayer newCompany, List<string> valid) => new()
     {
         FullName = valid.Contains(nameof(oldCompany.FullName)) ? newCompany.FullName : oldCompany.FullName,
         ShortName = valid.Contains(nameof(oldCompany.ShortName)) ? newCompany.ShortName : oldCompany.ShortName,
@@ -103,7 +104,7 @@ public class FormModelValidator
 
     private static List<string> ValidateCompanyTaxpayer(object? companyObject)
     {
-        var companyData = JsonSerializer.Deserialize<CompanyTaxpayer>(JsonSerializer.Serialize(companyObject));
+        var companyData = JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(companyObject));
         if (companyData is null) return [];
         var validProps = new List<string>();
         if (!string.IsNullOrWhiteSpace(companyData.FullName)) validProps.Add(nameof(companyData.FullName));
@@ -115,7 +116,7 @@ public class FormModelValidator
     
     private static List<string> ValidateIndividualTaxpayer(object? individualObject)
     {
-        var individualData = JsonSerializer.Deserialize<IndividualTaxpayer>(JsonSerializer.Serialize(individualObject));
+        var individualData = JsonSerializer.Deserialize<Taxpayer>(JsonSerializer.Serialize(individualObject));
         if (individualData is null) return [];
         var validProps = new List<string>();
 

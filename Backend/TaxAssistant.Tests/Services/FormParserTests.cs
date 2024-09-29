@@ -16,7 +16,7 @@ public class FormParserTests
         var formData = new FormModel
         {
             TaxpayerType = "individual",
-            TaxpayerData = new IndividualTaxpayer
+            TaxpayerData = new Taxpayer
             {
                 DateOfBirth = DateOnly.MinValue,
                 FirstName = "FirstName",

@@ -35,7 +35,7 @@ public record FormModel
     public int? Amount { get; init; }
 
     [JsonPropertyName("taxpayer_data")] //Unia
-    public object? TaxpayerData { get; init; }
+    public Taxpayer? TaxpayerData { get; init; }
 }
 
 public record Address
@@ -68,7 +68,7 @@ public record Address
     public string? PostalCode { get; init; }
 }
 
-public record IndividualTaxpayer
+public record Taxpayer
 {
     [JsonPropertyName("first_name")] //P_8 | ImiePierwsze |
     public string? FirstName { get; init; }
@@ -81,10 +81,7 @@ public record IndividualTaxpayer
 
     [JsonPropertyName("date_of_birth")] //P_8 | DataUrodzenia | validacja + format 1954-12-18
     public DateOnly? DateOfBirth { get; init; }
-}
-
-public record CompanyTaxpayer
-{
+    
     [JsonPropertyName("full_name")] //P_8 | PelnaNazwa |
     public string? FullName { get; init; }
 

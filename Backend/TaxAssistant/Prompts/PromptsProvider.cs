@@ -31,35 +31,44 @@ public static class PromptsProvider
                  4 - Podmiot, o którym mowa w art. 9 pkt 10 lit. b ustawy (pożyczkobiorca)
                  5 - Inny podmiot
                  
+                 Uwagi:
+                 ustal czy podatnik jest osoba fizyczna czy firma
+                 trzymaj sie formatu dat rok-miesiac-dzien
+                 pamietaj ze data moze byc podana jako "wczoraj" i powinienes policzyc na podstawie jaki dzis jest dzien
+                 poprawny nr pesel ma 11 cyfr a nip 10
+                 
                  Odpowiedz używając poniższego formatu:
               
               {
                 "questions_about_missing_fields": ["Jaka jest twoja data urodzenia"],
                 "form":
                   {
-                    date_of_action: "2024-01-01",
-                    office_name: "Urzad Skarbowy w Zawierciu",
-                    entity_submitting_action: 5,
-                    taxpayer_type: "individual",
-                    taxpayer_data: {
-                      first_name: "Jan",
-                      last_name: "Kowalski",
-                      pesel: "12345678900",
-                      date_of_birth: "",
+                    "date_of_action": "2024-01-01",
+                    "office_name": "Urzad Skarbowy w Zawierciu",
+                    "entity_submitting_action": 5,
+                    "taxpayer_type": "individual",
+                    "taxpayer_data": {
+                      "first_name": "Jan",
+                      "last_name": "Kowalski",
+                      "pesel": "12345678900",
+                      "date_of_birth": "1999-01-28",
+                      "nip": "1234323456",
+                      "full_name": "fegmention fault",
+                      "short_name": "ff"
                     },
-                    address: {
-                      country: "PL",
-                      province: "Slask",
-                      county: "Zawiercianski",
-                      municipality: "",
-                      street: "3 Maja",
-                      house_number: "12",
-                      apartment_number: "2",
-                      city: "Ogrodzieniec",
-                      postal_code: "42-440",
+                    "address": {
+                      "country": "PL",
+                      "province": "Slask",
+                      "county": "Zawiercianski",
+                      "municipality": "",
+                      "street": "3 Maja",
+                      "house_number": "12",
+                      "apartment_number": "2",
+                      "city": "Ogrodzieniec",
+                      "postal_code": "42-440",
                     },
-                    action_description: "Zakup auta",
-                    amount: 1000,
+                    "action_description": "Zakup auta",
+                    "amount": 1000,
                   }
               }
                   
