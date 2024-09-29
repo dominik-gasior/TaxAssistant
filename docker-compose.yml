@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   api:
-    image: kontotestowedominik/hackyeah:v2
+    build:
+      context: .
+      dockerfile: dockerfile
     container_name: dotnet_api
     ports:
       - "8000:8000"
@@ -10,10 +12,12 @@ services:
       - app-network
 
   frontend:
-    image: kontotestowedominik/hackyeah:v1
+    build:
+      context: .
+      dockerfile: dockerfile.frontend
     container_name: nextjs_app
     environment:
-      - NEXT_PUBLIC_BASE_URL=http://dotnet_api:8000/api
+      - NEXT_PUBLIC_BASE_URL=http://dotnet_api:8000
     ports:
       - "80:3000"
     networks:
