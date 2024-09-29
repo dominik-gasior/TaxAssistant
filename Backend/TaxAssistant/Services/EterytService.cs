@@ -29,7 +29,7 @@ public class EterytService : IEterytService
             {
                 SYM = x.Element("SYM")?.Value,
                 NAZWA = x.Element("NAZWA")?.Value,
-            }).ToList();
+            }).Distinct().ToList();
 
     public object GetMunicipalities(string voivodeshipID, string provinceID)
         => _eterytFiles.voidevodeships.Root?.Element("catalog").Elements("row")
@@ -40,7 +40,7 @@ public class EterytService : IEterytService
             {
                 GMI = x.Element("GMI")?.Value,
                 NAZWA = x.Element("NAZWA")?.Value,
-            }).ToList();
+            }).Distinct().ToList();
 
     public object GetProvinces(string voivodeshipID)
         => _eterytFiles.voidevodeships.Root?.Element("catalog").Elements("row")
