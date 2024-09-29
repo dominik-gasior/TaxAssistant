@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useEffect, useState } from "react"
+import { TFormMessage } from "@/app/types/steps"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Wand2 } from "lucide-react"
 import { nanoid } from "nanoid"
@@ -24,7 +27,7 @@ export default function ClientForm({
 }) {
   const [isInitialMessage, setIsInitialMessage] = useState(true)
   const { state, dispatch } = useForm()
-  const [nextQuestion, setNextQuestion] = useState("")
+  const [_, setNextQuestion] = useState("")
   const [sentence, setSentence] = useState("")
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [storedChatId, setNewChatId] = useLocalStorage("newChatId", id)
@@ -58,17 +61,17 @@ export default function ClientForm({
         dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
 
         // Update messages state with the chat log
-        const messages = restoredChat.chatLog.map((message) => ({
-          id: message.timeStamp.toString(), // Using timestamp as a unique id
+        const messages = restoredChat.chatLog.map((message: TFormMessage) => ({
+          id: message.timestamp.toString(), // Using timestamp as a unique id
           content: message.content,
           role: message.role,
-          timestamp: new Date(message.timeStamp * 1000).toISOString(),
+          timestamp: new Date(Number(message.timestamp) * 1000).toISOString(),
         }))
         dispatch({ type: "SET_MESSAGES", payload: messages })
 
         // Set the next question as the last assistant message, if any
         const lastAssistantMessage = restoredChat.chatLog
-          .filter((msg) => msg.role.toLowerCase() === "assistant")
+          .filter((msg: TFormMessage) => msg.role.toLowerCase() === "assistant")
           .pop()
         if (lastAssistantMessage) {
           setNextQuestion(lastAssistantMessage.content)
@@ -110,6 +113,8 @@ export default function ClientForm({
       })
 
       if (data.formData) {
+        console.log(data.formData, "data.formData exsists")
+
         // push the data.message into the state.messages array
         dispatch({
           type: "ADD_MESSAGE",
@@ -147,7 +152,7 @@ export default function ClientForm({
   const { formRef, onKeyDown } = useEnterSubmit()
 
   const { messagesRef, scrollRef, visibilityRef } = useScrollAnchor()
-console.log(state);
+  console.log(state)
 
   return (
     <div
@@ -165,7 +170,15 @@ console.log(state);
               )
               .map((message, index) => (
                 <div key={message.id}>
-                  {message.content}
+                  <div className="grid">
+                    <div className="text-xs text-muted-foreground flex flex-row justify-between items-center">
+                      <span>{message.role}</span>
+                      <span>
+                        {new Date(message.timestamp).toLocaleString()}
+                      </span>
+                    </div>
+                    <div>{message.content}</div>
+                  </div>
                   {index < state.messages.length - 1 && (
                     <Separator className="my-4" />
                   )}

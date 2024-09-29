@@ -25,7 +25,7 @@ export default function Step4({
   }
 
   const renderTaxpayerData = (data: TFormData["taxpayer_data"]) => {
-    if ("first_name" in data) {
+    if (data && "first_name" in data) {
       return (
         <>
           <p>
@@ -38,9 +38,9 @@ export default function Step4({
     } else {
       return (
         <>
-          <p>Nazwa pełna: {data.full_name}</p>
-          <p>Nazwa skrócona: {data.short_name}</p>
-          <p>NIP: {data.nip}</p>
+          <p>Nazwa pełna: {data?.full_name}</p>
+          <p>Nazwa skrócona: {data?.short_name}</p>
+          <p>NIP: {data?.nip}</p>
         </>
       )
     }

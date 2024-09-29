@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useEffect } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { ChevronLeft } from "lucide-react"
 
 import { useForm } from "@/lib/hooks/use-form"
@@ -32,10 +32,11 @@ export default function Page({ params }: { params: { type: string } }) {
   const nanoId = nanoid()
 
   useEffect(() => {
-    if (!state.nanoId) {
-      dispatch({ type: "SET_NANO_ID", payload: nanoId })
-    }
-  }, [])
+      if (!state.nanoId) {
+        dispatch({ type: "SET_NANO_ID", payload: nanoId })
+      }
+    }, [dispatch, nanoId, state.nanoId])
+    
 
   const handleNextStep = () => dispatch({ type: "NEXT_STEP" })
   const handlePreviousStep = () => dispatch({ type: "PREVIOUS_STEP" })
