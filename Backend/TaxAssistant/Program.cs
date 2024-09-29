@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<EterytFiles>();
+builder.Services.AddScoped<IEterytService, EterytService>();
 builder.Services.AddScoped<ILLMService, LLMService>();
 builder.Services.AddScoped<IFormService, FormParser>();
 builder.Services.ConfigureTerytClient(builder.Configuration);
