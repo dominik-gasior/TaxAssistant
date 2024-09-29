@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.Declarations.Services;
+using TaxAssistant.Services;
 
 namespace TaxAssistant.Controllers;
 
 [ApiController]
 public class ChatController : ControllerBase
 {
-    private readonly IDeclarationService _declarationService;
+    private readonly ConversationReader _conversationReader;
 
-    public ChatController(IDeclarationService declarationService)
+    public ChatController(ConversationReader conversationReader)
     {
-        _declarationService = declarationService;
+        _conversationReader = conversationReader;
     }
 
     [HttpGet("restore-chat")]
-    public async Task<IActionResult> Get([FromBody] FormFile formFile)
+    public async Task<IActionResult> Get(string conversationId)
     {
-        throw new NotImplementedException();
+        var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
+        return conversation is not null ? Ok(conversation) : NotFound();
     }
 }
