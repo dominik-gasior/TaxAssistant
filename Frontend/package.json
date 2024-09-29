@@ -9,7 +9,7 @@
     "lint": "next lint",
     "pages:build": "bunx @cloudflare/next-on-pages",
     "preview": "bun run pages:build && wrangler pages dev",
-    "deploy": "bun run pages:build && wrangler pages deploy",
+    "deploy": "bun run pages:build && wrangler pages deploy"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.1",
