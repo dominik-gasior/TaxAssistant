@@ -25,10 +25,21 @@ public class SendFormController : ControllerBase
     [HttpPost("send-form/{conversationId}")]
     public async Task<IActionResult> Post(string conversationId)
     {
+        Console.WriteLine($"Rozpoczecie pobierania konwersacji o ID: [{conversationId}]");
+        
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
-        if (conversation is null) return NotFound();
+
+        if (conversation is null)
+        {
+            Console.WriteLine($"Nie znaleziono konwersacji o ID: [{conversationId}]");
+            
+            return NotFound();
+        }
         var file = _formService.Generate("Templates/PCC-3(6).xml", conversation.FormModel);
         await _eDeclarationClient.SendForm(file);
+
+        Console.WriteLine($"Wyslano XML do serwisu EDeklaracje dla konwersacji o ID [{conversationId}]");
+        
         return Ok();
     }
 }

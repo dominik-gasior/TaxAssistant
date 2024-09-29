@@ -25,6 +25,8 @@ public class TaxAssistantController : ControllerBase
     [HttpPost("ask-tax-assistant/{conversationId}")]
     public async Task<IActionResult> GenerateLlmResponse(string conversationId, [FromBody] GenerateLlmRequest request)
     {
+        Console.WriteLine("Rozpoczecie generowania odpowiedzi przez asystenta");
+        
         var userRequestTimestamp = DateTime.Now.Ticks;
         if (request.IsInitialMessage)
         {

@@ -1,5 +1,5 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.Declarations.Services;
 using TaxAssistant.Models;
 using TaxAssistant.Services;
 
@@ -23,9 +23,13 @@ public class UpdateFormController : ControllerBase
     public async Task<IActionResult> Put(string conversationId, [FromBody] FormModel formModel)
     {
         //TODO: add validation
+        Console.WriteLine($"Rozpoczecie pobierania konwersacji o ID [{conversationId}]");
+        
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
         if (conversation is null)
         {
+            Console.WriteLine($"Nie znaleziono konwersacji o ID [{conversationId}]");
+            
             await _conversationDumper.DumpConversationLog(new ConversationData
             {
                 FormModel = formModel, ChatLog = [], Id = conversationId
@@ -34,6 +38,10 @@ public class UpdateFormController : ControllerBase
         else
         {
             await _conversationDumper.DumpConversationLog(conversation with { FormModel = formModel });
+
+            var logData = JsonSerializer.Serialize(conversation);
+            
+            Console.WriteLine($"Zapisano formularz do pliku [{conversationId}] [{logData}]");
         }
 
         return Ok();

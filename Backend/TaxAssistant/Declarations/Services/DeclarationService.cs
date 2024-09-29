@@ -32,12 +32,18 @@ public class DeclarationService : IDeclarationService
         foreach (var strategy in _strategies)
         {
             var classificationResult = await strategy.ClassifyAsync(userMessage);
-
+            
             if (!classificationResult) continue;
             var formModelWrapper = await GenerateQuestionAboutNextMissingFieldAsync(strategy.DeclarationType, userMessage);
+            
+            var formModelWrapperJson = JsonSerializer.Serialize(formModelWrapper);
+            Console.WriteLine($"Dopasowano odpowiedni typ deklaracji [{strategy.DeclarationType}] {formModelWrapperJson}");
+
             return formModelWrapper with { DeclarationType = strategy.DeclarationType };
         }
 
+        Console.WriteLine("Nie znaleziono odpowiedniego typu deklaracji");
+        
         return new NextQuestionGenerationResponse
         (
             "OTHER", 
@@ -52,6 +58,8 @@ public class DeclarationService : IDeclarationService
         (
             PromptsProvider.QuestionsResponseChecker(userMessage, declarationType)
         );
+
+        Console.WriteLine($"Wykryto dane w wiadomosci uzytkownika {formDataExtraction}");
         
         var formModelWrapper = JsonSerializer.Deserialize<FormModelWrapper>(formDataExtraction)!;
 

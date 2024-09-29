@@ -23,6 +23,8 @@ public class ConversationReader
     {
         var outputDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var filePath = Path.Combine(outputDirectory, $"dumps/{conversationId}.json");
+
+        Console.WriteLine($"Sciezka do pliku ze szczegolami konwersacji {filePath}");
         
         if (!File.Exists(filePath)) return null;
         var data = FileExtensions.GetTextFromFile(filePath);
