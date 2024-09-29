@@ -33,7 +33,7 @@ public class DownloadFileController : ControllerBase
         );
     }
     
-    public Task<DeclarationFileResponse> GenerateFileAsync(FormModel formModel)
+    private Task<DeclarationFileResponse> GenerateFileAsync(FormModel formModel)
     {
         var writer = new XmlSerializer(formModel.GetType());
         var stream = new MemoryStream();
