@@ -27,7 +27,7 @@ public class TaxAssistantController : ControllerBase
     {
         Console.WriteLine("Rozpoczecie generowania odpowiedzi przez asystenta");
         
-        var userRequestTimestamp = DateTime.Now.Ticks;
+        var userRequestTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (request.IsInitialMessage)
         {
             var nextQuestionGenerationResponse = await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage);
@@ -41,28 +41,31 @@ public class TaxAssistantController : ControllerBase
             request.UserMessage
         );
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
-        if (conversation is null) 
-        {
-            await DumpFlow(conversationId, request, result, userRequestTimestamp);
-        }
-        else
-        {
-            var updatedConversation = conversation with { FormModel = result.FormData ?? conversation.FormModel };
-            updatedConversation.ChatLog.Add(new Message
-            {
-                Content = request.UserMessage,
-                Role = Roles.User,
-                TimeStamp = userRequestTimestamp
-            });
-            updatedConversation.ChatLog.Add(new Message
-            {
-                Content = result.Message,
-                Role = Roles.Bot,
-                TimeStamp = DateTime.Now.Ticks
-            });
-            await _conversationDumper.DumpConversationLog(updatedConversation);
-        }
+        if (conversation is null) await DumpFlow(conversationId, request, result, userRequestTimestamp);
+        else await DumpUpdatedFlow(request, conversation, result, userRequestTimestamp);
         return Ok(result);
+    }
+
+    private async Task DumpUpdatedFlow(
+        GenerateLlmRequest request,
+        ConversationData conversation,
+        NextQuestionGenerationResponse result,
+        long userRequestTimestamp)
+    {
+        var updatedConversation = conversation with { FormModel = result.FormData ?? conversation.FormModel };
+        updatedConversation.ChatLog.Add(new Message
+        {
+            Content = request.UserMessage,
+            Role = Roles.User,
+            TimeStamp = userRequestTimestamp
+        });
+        updatedConversation.ChatLog.Add(new Message
+        {
+            Content = result.Message,
+            Role = Roles.Bot,
+            TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+        });
+        await _conversationDumper.DumpConversationLog(updatedConversation);
     }
 
     private async Task DumpFlow(
@@ -84,7 +87,7 @@ public class TaxAssistantController : ControllerBase
             {
                 Content = nextQuestionGenerationResponse.Message,
                 Role = Roles.Bot,
-                TimeStamp = DateTime.Now.Ticks
+                TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             }]
         });
     }

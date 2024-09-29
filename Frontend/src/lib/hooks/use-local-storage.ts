@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
 
 export const useLocalStorage = <T>(
@@ -5,7 +6,7 @@ export const useLocalStorage = <T>(
   initialValue: T
 ): [T, (value: T) => void] => {
   const [storedValue, setStoredValue] = useState(initialValue)
-  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const [isInitialLoad, _] = useState(true)
   // // On initial load, check if a key called 'newChatId' exists in localStorage. If it does, prompt the user to decide whether to continue from the last chat history or to clear it.
 
 

@@ -225,10 +225,7 @@ export default function Step2({
               <SelectValue placeholder="Wybierz kraj" />
             </SelectTrigger>
             <SelectContent>
-              {/*  */}
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              <SelectItem value="PL">PL</SelectItem>
             </SelectContent>
           </Select>
           {!formData.address.country && formData.address.country !== "" && (
@@ -279,12 +276,12 @@ export default function Step2({
             id="municipality"
             name="municipality"
             required
-            value={formData.address.municipality}
+            value={formData.address.municipality || ""}
             onChange={(e) =>
               handleChange("address.municipality", e.target.value)
             }
           />
-          {!formData.address.municipality && (
+          {!formData.address.municipality && formData.address.municipality !== "" && (
             <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
           )}
         </div>
@@ -300,7 +297,7 @@ export default function Step2({
             value={formData.address.street || ""}
             onChange={(e) => handleChange("address.street", e.target.value)}
           />
-          {!formData.address.street && (
+          {!formData.address.street &&  formData.address.street !== "" && (
             <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
           )}
         </div>
@@ -319,7 +316,7 @@ export default function Step2({
               handleChange("address.house_number", e.target.value)
             }
           />
-          {!formData.address.house_number && (
+          {!formData.address.house_number  && formData.address.house_number  !== "" && (
             <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
           )}
         </div>

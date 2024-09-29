@@ -1,4 +1,3 @@
-import Footer from "./footer"
 import Navbar from "./navbar"
 
 type TLayout = {
@@ -15,7 +14,6 @@ export default function Layout({ children }: TLayout) {
           {children}
         </div>
       </main>
-      <Footer className="font-sans" />
     </>
   )
 }

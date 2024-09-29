@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type TFormState = {
     currentStep: number;
     totalSteps: number;
@@ -5,8 +7,14 @@ export type TFormState = {
     nanoId: string | null;
     formData: TFormData
     error: string;
-    messages: any[];
+    messages: TFormMessage[];
 };
+export type TFormMessage = {
+    id: string
+    content: string
+    role: "user" | "assistant"
+    timestamp: string
+}
 
 export type TFormData = {
     // Step 1

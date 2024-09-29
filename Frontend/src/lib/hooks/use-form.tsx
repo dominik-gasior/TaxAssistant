@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client"
 
 import React, {
@@ -7,7 +9,7 @@ import React, {
   useEffect,
   useReducer,
 } from "react"
-import { TFormState } from "@/app/types/steps"
+import { TFormMessage, TFormState } from "@/app/types/steps"
 
 import { updateNestedObject } from "../utils"
 
@@ -57,12 +59,7 @@ type Action =
   | { type: "SET_NANO_ID"; payload: string }
   | {
       type: "ADD_MESSAGE"
-      payload: {
-        id: string
-        content: string
-        role: "user" | "assistant"
-        timestamp: string
-      }
+      payload: TFormMessage
     }
 //   add message
 

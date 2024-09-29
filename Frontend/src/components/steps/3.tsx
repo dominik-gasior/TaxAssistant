@@ -40,13 +40,14 @@ export default function Step3({
             name="action_description"
             className="w-full p-2 border rounded invalid:border-red-500 invalid:border-b"
             required
-            value={formData.action_description}
+            value={formData.action_description || ""}
             onChange={(e) => handleChange("action_description", e.target.value)}
             rows={4}
           />
-          {!formData.action_description && (
-            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
-          )}
+          {!formData.action_description &&
+            formData.action_description !== "" && (
+              <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+            )}
         </div>
 
         <div className="mb-4">
@@ -59,7 +60,7 @@ export default function Step3({
             name="amount"
             className="w-full p-2 border rounded invalid:border-red-500 invalid:border-b"
             required
-            value={formData.amount}
+            value={formData.amount || ""}
             onChange={(e) => handleChange("amount", e.target.value)}
           />
           {!formData.amount && (

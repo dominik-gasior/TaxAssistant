@@ -1,10 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-
-import { useForm } from "@/lib/hooks/use-form"
-import { Button } from "@/components/ui/button"
+import { ChevronRight } from "lucide-react"
 
 const TAX_TYPES = [
   {
