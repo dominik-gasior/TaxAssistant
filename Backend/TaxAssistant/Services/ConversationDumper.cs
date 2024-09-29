@@ -21,8 +21,11 @@ public class ConversationReader
 {
     public async Task<ConversationData?>  GetLatestConversationLog(string conversationId)
     {
-        if (!File.Exists($"/dumps/{conversationId}.json")) return null;
-        var data = FileExtensions.GetTextFromFile($"/dumps/{conversationId}.json");
+        var outputDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        var filePath = Path.Combine(outputDirectory, $"dumps/{conversationId}.json");
+        
+        if (!File.Exists(filePath)) return null;
+        var data = FileExtensions.GetTextFromFile(filePath);
         return data is null ? null : JsonSerializer.Deserialize<ConversationData>(data);
     }
 }
