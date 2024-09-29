@@ -16,6 +16,10 @@ builder.Services.AddScoped<IFormService, FormParser>();
 builder.Services.ConfigureTerytClient(builder.Configuration);
 builder.Services.ConfigureEDeclarationClient(builder.Configuration);
 builder.Services.ConfigureLlmClient(builder.Configuration);
+
+builder.Services.AddSingleton<ConversationDumper>();
+builder.Services.AddSingleton<ConversationReader>();
+
 builder.Services.RegisterDeclarations();
 
 builder.Services.AddCors(options =>

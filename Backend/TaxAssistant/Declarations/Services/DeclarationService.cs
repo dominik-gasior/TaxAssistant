@@ -14,7 +14,6 @@ public interface IDeclarationService
 {
     Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync(string userMessage);
     Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage);
-    Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile);
 }
 
 public class DeclarationService : IDeclarationService
@@ -80,25 +79,5 @@ public class DeclarationService : IDeclarationService
         var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(userMessage, firstMissingQuestion), "text");
 
         return questionToTheHuman;
-    }
-    
-    public Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile)
-    {
-        var writer = new XmlSerializer(formFile.GetType());
-        var stream = new MemoryStream();
-        
-        writer.Serialize(stream, formFile);
-
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var fileName = $"declaration_{timestamp}.xml";
-
-        return Task.FromResult
-        (
-            new DeclarationFileResponse
-            (
-                stream.ToArray(), 
-                fileName
-            )
-        );
     }
 }
