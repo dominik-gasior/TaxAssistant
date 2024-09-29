@@ -1,21 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Services;
+using TaxAssistant.Models;
+using TaxAssistant.Services;
 
 namespace TaxAssistant.Controllers;
 
 [ApiController]
 public class UpdateFormController : ControllerBase
 {
-    private readonly IDeclarationService _declarationService;
+    private readonly ConversationDumper _conversationDumper;
+    private readonly ConversationReader _conversationReader;
 
-    public UpdateFormController(IDeclarationService declarationService)
+    public UpdateFormController(
+        ConversationDumper conversationDumper,
+        ConversationReader conversationReader)
     {
-        _declarationService = declarationService;
+        _conversationDumper = conversationDumper;
+        _conversationReader = conversationReader;
     }
 
     [HttpPut("update-form")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
+    public async Task<IActionResult> Put(string conversationId, [FromBody] FormModel formModel)
     {
-        throw new NotImplementedException();
+        //TODO: add validation
+        var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
+        if (conversation is null)
+        {
+            await _conversationDumper.DumpConversationLog(new ConversationData
+            {
+                FormModel = formModel, ChatLog = [], Id = conversationId
+            });
+        }
+        else
+        {
+            await _conversationDumper.DumpConversationLog(conversation with { FormModel = formModel });
+        }
+
+        return Ok();
     }
 }
