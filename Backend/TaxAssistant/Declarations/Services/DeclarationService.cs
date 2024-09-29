@@ -12,8 +12,8 @@ namespace TaxAssistant.Declarations.Services;
 
 public interface IDeclarationService
 {
-    Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync(string userMessage);
-    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage);
+    Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync(string userMessage);
+    Task<NextQuestionGenerationResponse> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage);
 }
 
 public class DeclarationService : IDeclarationService
@@ -27,7 +27,7 @@ public class DeclarationService : IDeclarationService
         _strategies = strategies;
     }
 
-    public async Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync([FromBody] string userMessage)
+    public async Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync([FromBody] string userMessage)
     {
         foreach (var strategy in _strategies)
         {
@@ -35,22 +35,24 @@ public class DeclarationService : IDeclarationService
 
             if (classificationResult)
             {
-                return new GetCorrectDeclarationTypeResponse
+                return new NextQuestionGenerationResponse
                 (
                     strategy.DeclarationType,
+                    null,
                     await _llmService.GenerateMessageAsync(PromptsProvider.DetectedDeclarationFormat(userMessage, strategy.DeclarationType), "text")
                 );
             }
         }
 
-        return  new GetCorrectDeclarationTypeResponse
+        return new NextQuestionGenerationResponse
         (
             "OTHER", 
+            null,
             await _llmService.GenerateMessageAsync(PromptsProvider.NoMatchingDeclarationType(userMessage), "text")
         );
     }
     
-    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage)
+    public async Task<NextQuestionGenerationResponse> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage)
     {
         var formDataExtraction = await _llmService.GenerateMessageAsync
         (
@@ -72,12 +74,14 @@ public class DeclarationService : IDeclarationService
 
         if (nextQuestions.Count == 0)
         {
-            return await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
+            var message = await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
+            
+            return new NextQuestionGenerationResponse(declarationType, formModel, message);
         }
         
         var firstMissingQuestion = nextQuestions.First().Value;
         var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(userMessage, firstMissingQuestion), "text");
 
-        return questionToTheHuman;
+        return new NextQuestionGenerationResponse(declarationType, formModel, questionToTheHuman);
     }
 }

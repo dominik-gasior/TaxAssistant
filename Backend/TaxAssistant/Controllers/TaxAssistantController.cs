@@ -21,7 +21,13 @@ public class TaxAssistantController : ControllerBase
         {
             return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage));
         }
+
+        var result = await _declarationService.GenerateQuestionAboutNextMissingFieldAsync
+        (
+            request.DeclarationType,
+            request.UserMessage
+        );
         
-        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(request.DeclarationType, request.UserMessage));
+        return Ok(result);
     }
 }

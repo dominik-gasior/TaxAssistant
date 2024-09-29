@@ -21,12 +21,19 @@ public static class PromptsProvider
                  '''{{message}}'''
                  KONIEC WIADOMOSCI
                  
+                 Pole entity_submitting_action przyjmuje nastepujace wartosci
+                 1 - Podmiot zobowiązany solidarnie do zapłaty podatku 
+                 2 - Strona umowy zamiany
+                 3 - Wspólnik spółki cywilnej
+                 4 - Podmiot, o którym mowa w art. 9 pkt 10 lit. b ustawy (pożyczkobiorca)
+                 5 - Inny podmiot
+                 
                  Odpowiedz używając poniższego formatu:
               
                   {
                     date_of_action: "2024-01-01",
                     office_name: "Urzad Skarbowy w Zawierciu",
-                    entity_submitting_action: true,
+                    entity_submitting_action: 5,
                     taxpayer_type: "individual",
                     taxpayer_data: {
                       first_name: "Jan",
