@@ -1,9 +1,11 @@
+using System.Text.Json;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
 using TaxAssistant.Declarations.Questions;
 using TaxAssistant.Declarations.Strategies.Interfaces;
 using TaxAssistant.External.Services;
+using TaxAssistant.Models;
 using TaxAssistant.Prompts;
 
 namespace TaxAssistant.Declarations.Services;
@@ -51,10 +53,12 @@ public class DeclarationService : IDeclarationService
     
     public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage)
     {
-        var questionsCheck = await _llmService.GenerateMessageAsync
+        var formDataExtraction = await _llmService.GenerateMessageAsync
         (
             PromptsProvider.QuestionsResponseChecker(userMessage)
         );
+
+        var formModel = JsonSerializer.Deserialize<FormModel>(formDataExtraction);
         
         //var prompt = PromptsProvider.QuestionsClassification();
         
