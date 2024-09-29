@@ -19,7 +19,7 @@ public class UpdateFormController : ControllerBase
         _conversationReader = conversationReader;
     }
 
-    [HttpPut("update-form")]
+    [HttpPut("update-form/{conversationId}")]
     public async Task<IActionResult> Put(string conversationId, [FromBody] FormModel formModel)
     {
         //TODO: add validation
