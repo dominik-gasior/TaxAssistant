@@ -14,7 +14,7 @@ export const useFormMutation = () => {
         throw new Error("Nano ID is required")
       }
       const response = await fetch(
-        `http://192.168.137.185:49234/update-form/${nanoId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL!}/update-form/${nanoId}`,
         {
           method: "PUT",
           body: JSON.stringify(state.formData),
