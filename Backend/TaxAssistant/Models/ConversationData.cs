@@ -9,8 +9,14 @@ public record ConversationData
 
 public record Message
 {
-    public required int TimeStamp { get; init; }
+    public required long TimeStamp { get; init; }
     public required string Role { get; init; }
     public required string Content { get; init; }
+}
+
+public static class Roles
+{
+    public static string User => "USER";
+    public static string Bot => "BOT";
 }
 

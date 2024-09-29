@@ -1,10 +1,10 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
 using TaxAssistant.Declarations.Strategies.Interfaces;
 using TaxAssistant.External.Services;
 using TaxAssistant.Models;
 using TaxAssistant.Prompts;
+using TaxAssistant.Services;
 
 namespace TaxAssistant.Declarations.Services;
 
@@ -18,28 +18,24 @@ public class DeclarationService : IDeclarationService
 {
     private readonly ILLMService _llmService;
     private readonly IEnumerable<IDeclarationStrategy> _strategies;
+    
 
-    public DeclarationService(ILLMService llmService, IEnumerable<IDeclarationStrategy> strategies)
+    public DeclarationService(ILLMService llmService,
+        IEnumerable<IDeclarationStrategy> strategies)
     {
         _llmService = llmService;
         _strategies = strategies;
     }
 
-    public async Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync([FromBody] string userMessage)
+    public async Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync(string userMessage)
     {
         foreach (var strategy in _strategies)
         {
             var classificationResult = await strategy.ClassifyAsync(userMessage);
 
-            if (classificationResult)
-            {
-                return new NextQuestionGenerationResponse
-                (
-                    strategy.DeclarationType,
-                    null,
-                    await _llmService.GenerateMessageAsync(PromptsProvider.DetectedDeclarationFormat(userMessage, strategy.DeclarationType), "text")
-                );
-            }
+            if (!classificationResult) continue;
+            var formModelWrapper = await GenerateQuestionAboutNextMissingFieldAsync(strategy.DeclarationType, userMessage);
+            return formModelWrapper with { DeclarationType = strategy.DeclarationType };
         }
 
         return new NextQuestionGenerationResponse
@@ -56,16 +52,13 @@ public class DeclarationService : IDeclarationService
         (
             PromptsProvider.QuestionsResponseChecker(userMessage, declarationType)
         );
-
-        var formModelWrapper = JsonSerializer.Deserialize<FormModelWrapper>(formDataExtraction);
         
-        if (!formModelWrapper!.Questions.Any())
-        {
-            var message = await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
-            
-            return new NextQuestionGenerationResponse(declarationType, formModelWrapper.FormModel, message);
-        }
+        var formModelWrapper = JsonSerializer.Deserialize<FormModelWrapper>(formDataExtraction)!;
 
-        return new NextQuestionGenerationResponse(declarationType, formModelWrapper.FormModel, formModelWrapper.Questions.First());
+        var message = formModelWrapper.Questions.Length is 0 
+            ? await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text")
+            : formModelWrapper.Questions.First();
+        
+        return new NextQuestionGenerationResponse(declarationType, formModelWrapper.FormModel, message);
     }
 }

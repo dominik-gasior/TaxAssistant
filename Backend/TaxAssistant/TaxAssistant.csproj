@@ -15,6 +15,19 @@
     <None Update="Templates\PCC-3(6).xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+        <None Update="Templates\ulice.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\wojewodztwa.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\miejscowosci.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs/" />
   </ItemGroup>
 
 </Project>
