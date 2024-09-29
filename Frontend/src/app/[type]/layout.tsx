@@ -1,4 +1,5 @@
 import ClientForm from "@/components/client-form"
+import { nanoid } from "nanoid"
 
 export default function Layout({
   children,
@@ -7,10 +8,11 @@ export default function Layout({
   children: React.ReactNode
   params: { type: string }
 }) {
+  const nanoId = nanoid ()
   return (
     <>
       {children}
-      <ClientForm declarationType={params.type} />
+      <ClientForm declarationType={params.type} id={nanoId} />
     </>
   )
 }

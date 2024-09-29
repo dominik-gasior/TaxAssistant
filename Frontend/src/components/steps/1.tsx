@@ -2,7 +2,10 @@
 
 import { TStepStart } from "@/app/types/steps"
 
+import { useFormMutation } from "@/lib/hooks/use-form-mutation"
+
 import { Button } from "../ui/button"
+import SaveStep from "./save-step"
 
 export default function Step1({
   state,
@@ -10,6 +13,12 @@ export default function Step1({
   handleNextStep,
 }: TStepStart) {
   const { formData } = state
+  console.log(formData.date_of_action)
+  const { mutate, isPending } = useFormMutation()
+  const handleSubmit = () => {
+    mutate()
+  }
+
   return (
     <form className="flex flex-col gap-5">
       <div className="flex flex-col gap-4 p-4">
@@ -32,7 +41,6 @@ export default function Step1({
             className="w-full p-2 border rounded invalid:border-red-500 invalid:border-b"
             required
             value={formData.date_of_action || ""}
-            
             onChange={(e) => handleChange("date_of_action", e.target.value)}
           />
           {!formData.date_of_action && (
@@ -64,10 +72,14 @@ export default function Step1({
           )}
         </div>
       </div>
-      <div className="flex gap-4 mt-4 bg-muted p-4 border-t border-input">
+      <div className="flex gap-4 justify-between mt-4 bg-muted p-4 border-t border-input">
         <Button type="button" className="font-bold" onClick={handleNextStep}>
           Następny krok
         </Button>
+        <SaveStep
+          handleSubmit={handleSubmit}
+          disabled={state.sameDataAsResponse === false || isPending}
+        />
       </div>
     </form>
   )
