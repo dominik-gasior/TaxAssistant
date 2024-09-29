@@ -38,7 +38,7 @@ public class DeclarationService : IDeclarationService
                 return new NextQuestionGenerationResponse
                 (
                     strategy.DeclarationType,
-                    formModelWrapper.FormModel,
+                    formModelWrapper.FormData,
                     formModelWrapper.Message
                 );
             }
