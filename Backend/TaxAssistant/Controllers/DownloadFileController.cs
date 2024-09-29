@@ -1,23 +1,30 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.Declarations.Services;
+using TaxAssistant.Declarations.Models;
+using TaxAssistant.Models;
+using TaxAssistant.Services;
 
 namespace TaxAssistant.Controllers;
 
 [ApiController]
+[Route("api/download-file")]
 public class DownloadFileController : ControllerBase
 {
-    private readonly IDeclarationService _declarationService;
+    private readonly ConversationReader _conversationReader;
+    private readonly IFormService _formService;
 
-    public DownloadFileController(IDeclarationService declarationService)
+    public DownloadFileController(ConversationReader conversationReader, IFormService formService)
     {
-        _declarationService = declarationService;
+        _conversationReader = conversationReader;
+        _formService = formService;
     }
 
-    [HttpGet("download-file")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
+    [HttpGet]
+    public async Task<IActionResult> GetDeclarationFileAsync(string conversationId)
     {
-        var declaration = await _declarationService.GenerateFileAsync(formFile);
+        var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
+        if (conversation is null) return NotFound();
+        var declaration = await GenerateFileAsync(conversation.FormModel);
 
         return File
         (
@@ -25,5 +32,19 @@ public class DownloadFileController : ControllerBase
             MediaTypeNames.Application.Xml,
             declaration.FileName
         );
+    }
+
+    private async Task<DeclarationFileResponse> GenerateFileAsync(FormModel formModel)
+    {
+        var xml = _formService.Generate("Templates/PCC-3(6).xml", formModel);
+
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var fileName = $"declaration_{timestamp}.xml";
+
+        using var stream = new MemoryStream();
+        using var reader = new StreamWriter(stream);
+        await reader.WriteAsync(xml);
+
+        return new DeclarationFileResponse(stream.ToArray(), fileName);
     }
 }

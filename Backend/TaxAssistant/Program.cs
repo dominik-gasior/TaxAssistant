@@ -2,6 +2,7 @@ using TaxAssistant.Declarations;
 using TaxAssistant.Extensions;
 using TaxAssistant.Extensions.Middlewares;
 using TaxAssistant.External.Services;
+using TaxAssistant.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILLMService, LLMService>();
+builder.Services.AddScoped<IFormService, FormParser>();
 builder.Services.ConfigureTerytClient(builder.Configuration);
 builder.Services.ConfigureEDeclarationClient(builder.Configuration);
 builder.Services.ConfigureLlmClient(builder.Configuration);
+
+builder.Services.AddSingleton<ConversationDumper>();
+builder.Services.AddSingleton<ConversationReader>();
+
 builder.Services.RegisterDeclarations();
 
 builder.Services.AddCors(options =>
@@ -39,5 +45,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 app.UseCors("Front");
 app.MapControllers();
+
+app.MapGet("/", () => "Hello from TaxAssistant").WithTags("HealthCheck");
 
 app.Run();

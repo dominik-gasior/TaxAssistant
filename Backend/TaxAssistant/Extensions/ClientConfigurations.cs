@@ -16,7 +16,7 @@ public static class ClientConfigurations
             client.BaseAddress = new Uri(settings.BaseURL);
         });
     }
-    
+
     public static void ConfigureEDeclarationClient(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<EDeclarationSettings>(config.GetSection(EDeclarationSettings.SectionName));
@@ -26,11 +26,11 @@ public static class ClientConfigurations
             client.BaseAddress = new Uri(settings.BaseURL);
         });
     }
-    
+
     public static void ConfigureLlmClient(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<LLMSettings>(config.GetSection(LLMSettings.SectionName));
-        services.AddHttpClient<LlmClient>((sp,client ) =>
+        services.AddHttpClient<LlmClient>((sp, client) =>
         {
             var settings = sp.GetRequiredService<IOptions<LLMSettings>>().Value;
             client.BaseAddress = new Uri(settings.BaseURL);

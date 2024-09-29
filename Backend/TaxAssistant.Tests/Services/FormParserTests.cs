@@ -42,7 +42,7 @@ public class FormParserTests
             ActionDescription = "ActionDescription"
         };
         // Act
-        var result = _sut.Generate("Models/Templates/PCC-3(6).xml", formData);
+        var result = _sut.Generate("Templates/PCC-3(6).xml", formData);
         
         // Assert
         await Verify(result);

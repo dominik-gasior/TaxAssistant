@@ -1,21 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.Declarations.Services;
+using TaxAssistant.External.Clients;
+using TaxAssistant.Models;
+using TaxAssistant.Services;
 
 namespace TaxAssistant.Controllers;
 
 [ApiController]
+[Route("api/send-form")]
 public class SendFormController : ControllerBase
 {
-    private readonly IDeclarationService _declarationService;
+    private readonly IFormService _formService;
+    private readonly EDeclarationClient _eDeclarationClient;
 
-    public SendFormController(IDeclarationService declarationService)
+    public SendFormController(IFormService formService, EDeclarationClient eDeclarationClient)
     {
-        _declarationService = declarationService;
+        _formService = formService;
+        _eDeclarationClient = eDeclarationClient;
     }
 
-    [HttpPost("send-form")]
-    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormFile formFile)
+    [HttpPost]
+    public async Task<IActionResult> GetDeclarationFileAsync([FromBody] FormModel model)
     {
-        throw new NotImplementedException();
+        var file = _formService.Generate("Templates/PCC-3(6).xml", model);
+        await _eDeclarationClient.SendForm(file);
+        return Ok();
     }
 }

@@ -1,18 +1,19 @@
+using System.Text.Json;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
 using TaxAssistant.Declarations.Questions;
 using TaxAssistant.Declarations.Strategies.Interfaces;
 using TaxAssistant.External.Services;
+using TaxAssistant.Models;
 using TaxAssistant.Prompts;
 
 namespace TaxAssistant.Declarations.Services;
 
 public interface IDeclarationService
 {
-    Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync(string userMessage);
-    Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage);
-    Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile);
+    Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync(string userMessage);
+    Task<NextQuestionGenerationResponse> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage);
 }
 
 public class DeclarationService : IDeclarationService
@@ -26,7 +27,7 @@ public class DeclarationService : IDeclarationService
         _strategies = strategies;
     }
 
-    public async Task<GetCorrectDeclarationTypeResponse> GetCorrectDeclarationTypeAsync([FromBody] string userMessage)
+    public async Task<NextQuestionGenerationResponse> GetCorrectDeclarationTypeAsync([FromBody] string userMessage)
     {
         foreach (var strategy in _strategies)
         {
@@ -34,27 +35,31 @@ public class DeclarationService : IDeclarationService
 
             if (classificationResult)
             {
-                return new GetCorrectDeclarationTypeResponse
+                return new NextQuestionGenerationResponse
                 (
                     strategy.DeclarationType,
+                    null,
                     await _llmService.GenerateMessageAsync(PromptsProvider.DetectedDeclarationFormat(userMessage, strategy.DeclarationType), "text")
                 );
             }
         }
 
-        return  new GetCorrectDeclarationTypeResponse
+        return new NextQuestionGenerationResponse
         (
             "OTHER", 
+            null,
             await _llmService.GenerateMessageAsync(PromptsProvider.NoMatchingDeclarationType(userMessage), "text")
         );
     }
     
-    public async Task<string> GenerateQuestionAboutNextMissingFieldAsync(string declarationType, string userMessage)
+    public async Task<NextQuestionGenerationResponse> GenerateQuestionAboutNextMissingFieldAsync(string? declarationType, string userMessage)
     {
-        var questionsCheck = await _llmService.GenerateMessageAsync
+        var formDataExtraction = await _llmService.GenerateMessageAsync
         (
             PromptsProvider.QuestionsResponseChecker(userMessage)
         );
+
+        var formModel = JsonSerializer.Deserialize<FormModel>(formDataExtraction);
         
         //var prompt = PromptsProvider.QuestionsClassification();
         
@@ -69,32 +74,14 @@ public class DeclarationService : IDeclarationService
 
         if (nextQuestions.Count == 0)
         {
-            return await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
+            var message = await _llmService.GenerateMessageAsync(PromptsProvider.DeclarationIsReadyToConfirm(userMessage), "text");
+            
+            return new NextQuestionGenerationResponse(declarationType, formModel, message);
         }
         
         var firstMissingQuestion = nextQuestions.First().Value;
         var questionToTheHuman = await _llmService.GenerateMessageAsync(PromptsProvider.NextQuestion(userMessage, firstMissingQuestion), "text");
 
-        return questionToTheHuman;
-    }
-    
-    public Task<DeclarationFileResponse> GenerateFileAsync(FormFile formFile)
-    {
-        var writer = new XmlSerializer(formFile.GetType());
-        var stream = new MemoryStream();
-        
-        writer.Serialize(stream, formFile);
-
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var fileName = $"declaration_{timestamp}.xml";
-
-        return Task.FromResult
-        (
-            new DeclarationFileResponse
-            (
-                stream.ToArray(), 
-                fileName
-            )
-        );
+        return new NextQuestionGenerationResponse(declarationType, formModel, questionToTheHuman);
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TaxAssistant.Declarations.Models;
 using TaxAssistant.Declarations.Services;
 
 namespace TaxAssistant.Controllers;
@@ -14,13 +15,19 @@ public class TaxAssistantController : ControllerBase
     }
     
     [HttpPost("ask-tax-assistant")]
-    public async Task<IActionResult> GenerateLlmResponse(string userMessage, bool isInitialMessage, string declarationType)
+    public async Task<IActionResult> GenerateLlmResponse([FromBody] GenerateLlmRequest request)
     {
-        if (isInitialMessage)
+        if (request.IsInitialMessage)
         {
-            return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(userMessage));
+            return Ok(await _declarationService.GetCorrectDeclarationTypeAsync(request.UserMessage));
         }
+
+        var result = await _declarationService.GenerateQuestionAboutNextMissingFieldAsync
+        (
+            request.DeclarationType,
+            request.UserMessage
+        );
         
-        return Ok(await _declarationService.GenerateQuestionAboutNextMissingFieldAsync(declarationType, userMessage));
+        return Ok(result);
     }
 }
