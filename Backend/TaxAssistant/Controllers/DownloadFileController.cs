@@ -1,24 +1,25 @@
 using System.Net.Mime;
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.Declarations.Models;
-using TaxAssistant.Declarations.Services;
 using TaxAssistant.Models;
 using TaxAssistant.Services;
 
 namespace TaxAssistant.Controllers;
 
 [ApiController]
+[Route("api/download-file")]
 public class DownloadFileController : ControllerBase
 {
-    private ConversationReader _conversationReader;
+    private readonly ConversationReader _conversationReader;
+    private readonly IFormService _formService;
 
-    public DownloadFileController(ConversationReader conversationReader)
+    public DownloadFileController(ConversationReader conversationReader, IFormService formService)
     {
         _conversationReader = conversationReader;
+        _formService = formService;
     }
 
-    [HttpGet("download-file")]
+    [HttpGet]
     public async Task<IActionResult> GetDeclarationFileAsync(string conversationId)
     {
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
@@ -32,24 +33,18 @@ public class DownloadFileController : ControllerBase
             declaration.FileName
         );
     }
-    
-    private Task<DeclarationFileResponse> GenerateFileAsync(FormModel formModel)
+
+    private async Task<DeclarationFileResponse> GenerateFileAsync(FormModel formModel)
     {
-        var writer = new XmlSerializer(formModel.GetType());
-        var stream = new MemoryStream();
-        
-        writer.Serialize(stream, formModel);
+        var xml = _formService.Generate("Templates/PCC-3(6).xml", formModel);
 
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var fileName = $"declaration_{timestamp}.xml";
 
-        return Task.FromResult
-        (
-            new DeclarationFileResponse
-            (
-                stream.ToArray(), 
-                fileName
-            )
-        );
+        using var stream = new MemoryStream();
+        using var reader = new StreamWriter(stream);
+        await reader.WriteAsync(xml);
+
+        return new DeclarationFileResponse(stream.ToArray(), fileName);
     }
 }

@@ -11,7 +11,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILLMService, LLMService>();
-builder.Services.AddScoped<IEDeclarationService, EDeclarationService>();
 builder.Services.AddScoped<IFormService, FormParser>();
 builder.Services.ConfigureTerytClient(builder.Configuration);
 builder.Services.ConfigureEDeclarationClient(builder.Configuration);
