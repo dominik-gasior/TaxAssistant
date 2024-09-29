@@ -26,21 +26,20 @@ public class UpdateFormController : ControllerBase
         Console.WriteLine($"Rozpoczecie pobierania konwersacji o ID [{conversationId}]");
         
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
+        var updatedModel = FormModelValidator.UpdateFormModel(conversation?.FormModel ?? new FormModel(), formModel);
+        
         if (conversation is null)
         {
             Console.WriteLine($"Nie znaleziono konwersacji o ID [{conversationId}]");
-            
             await _conversationDumper.DumpConversationLog(new ConversationData
             {
-                FormModel = formModel, ChatLog = [], Id = conversationId
+                FormModel = updatedModel, ChatLog = [], Id = conversationId
             });
         }
         else
         {
-            await _conversationDumper.DumpConversationLog(conversation with { FormModel = formModel });
-
+            await _conversationDumper.DumpConversationLog(conversation with { FormModel = updatedModel });
             var logData = JsonSerializer.Serialize(conversation);
-            
             Console.WriteLine($"Zapisano formularz do pliku [{conversationId}] [{logData}]");
         }
 
