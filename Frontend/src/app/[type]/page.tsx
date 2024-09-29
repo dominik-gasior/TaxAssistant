@@ -3,9 +3,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
 import { ChevronLeft } from "lucide-react"
 import { nanoid } from "nanoid"
 
+import { restoreChat } from "@/lib/action"
 import { useForm } from "@/lib/hooks/use-form"
 import { useLocalStorage } from "@/lib/hooks/use-local-storage"
 import {
@@ -27,7 +29,6 @@ import Step3 from "@/components/steps/3"
 import Step4 from "@/components/steps/4"
 
 import { HandleChangeFunction, TFormMessage } from "../types/steps"
-import { useQuery } from "@tanstack/react-query"
 
 export default function Page({ params }: { params: { type: string } }) {
   const { state, dispatch } = useForm()
@@ -35,7 +36,6 @@ export default function Page({ params }: { params: { type: string } }) {
   const [storedNanoId, setStoredNanoId] = useLocalStorage("newChatId", nanoid())
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [queryEnabled, setQueryEnabled] = useState(false)
-  
 
   useEffect(() => {
     if (!state.nanoId) {
@@ -51,16 +51,9 @@ export default function Page({ params }: { params: { type: string } }) {
     }
   }, [])
 
-  
   const { data: restoredChat, status } = useQuery({
     queryKey: ["restoreChat", storedNanoId],
-    queryFn: async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL!}/restore-chat/${storedNanoId}`
-      )
-      if (!response.ok) throw new Error("Failed to restore chat")
-      return response.json()
-    },
+    queryFn: () => restoreChat(storedNanoId),
     refetchOnWindowFocus: false,
     retry: false,
     refetchOnMount: false,
@@ -68,7 +61,6 @@ export default function Page({ params }: { params: { type: string } }) {
     staleTime: Infinity, // Prevent auto-refetching
     gcTime: Infinity, // Keep the data cached indefinitely
   })
-
 
   useEffect(() => {
     if (isInitialLoad && restoredChat && status === "success") {

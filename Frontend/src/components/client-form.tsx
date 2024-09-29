@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { Wand2 } from "lucide-react"
 import { nanoid } from "nanoid"
 
+import { taxAssistant } from "@/lib/action"
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit"
 import { useForm } from "@/lib/hooks/use-form"
 import { useLocalStorage } from "@/lib/hooks/use-local-storage"
@@ -35,21 +36,18 @@ export default function ClientForm({
 
   // Use useQuery for the initial message
   const { mutate: sendInitialMessage, isPending } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL!}/ask-tax-assistant/${id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userMessage: sentence,
-            declarationType,
-            isInitialMessage: isInitialMessage,
-          }),
-        }
-      )
-      return await response.json()
-    },
+    mutationFn: ({
+      nanoId,
+      sentence,
+      declarationType,
+      isInitialMessage,
+    }: {
+      nanoId: string
+      sentence: string
+      declarationType: string
+      isInitialMessage: boolean
+    }) => taxAssistant(nanoId, sentence, declarationType, isInitialMessage),
+
     onSuccess: (data) => {
       // add the user message to the state.messages array
       dispatch({
@@ -83,7 +81,6 @@ export default function ClientForm({
         dispatch({ type: "SET_ERROR", payload: data.message })
       } else {
         dispatch({ type: "SET_ERROR", payload: data.message })
-
       }
 
       // toast.error("Nie udało się pobrać danych")
@@ -147,7 +144,12 @@ export default function ClientForm({
                 ref={formRef}
                 onSubmit={(e) => {
                   e.preventDefault()
-                  sendInitialMessage()
+                  sendInitialMessage({
+                    nanoId: id,
+                    sentence,
+                    declarationType,
+                    isInitialMessage,
+                  })
                 }}
                 className="flex flex-row space-x-2"
               >
