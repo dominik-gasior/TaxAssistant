@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Wand2 } from "lucide-react"
+import { nanoid } from "nanoid"
 
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit"
 import { useForm } from "@/lib/hooks/use-form"
 import { useLocalStorage } from "@/lib/hooks/use-local-storage"
 import { useScrollAnchor } from "@/lib/hooks/use-scroll-anchor"
-import { cn } from "@/lib/utils"
 
 import { EmptyScreen } from "./empty-screen"
 import { Button } from "./ui/button"
@@ -26,7 +26,7 @@ export default function ClientForm({
   const { state, dispatch } = useForm()
   const [nextQuestion, setNextQuestion] = useState("")
   const [sentence, setSentence] = useState("")
-
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [storedChatId, setNewChatId] = useLocalStorage("newChatId", id)
 
   useEffect(() => {
@@ -47,58 +47,89 @@ export default function ClientForm({
     refetchOnWindowFocus: false,
     retry: false,
     refetchOnMount: false,
-    enabled: !!storedChatId, // Only run the query if storedChatId exists
+    enabled: !!storedChatId && isInitialLoad, //
+    staleTime: Infinity, // Prevent auto-refetching
+    gcTime: Infinity, // Keep the data cached indefinitely
   })
 
   useEffect(() => {
-    if (restoredChat && status === "success") {
-      dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
+    if (isInitialLoad) {
+      if (restoredChat && status === "success") {
+        dispatch({ type: "SET_RESPONSE_DATA", payload: restoredChat.formModel })
 
-      // Update messages state with the chat log
-      const messages = restoredChat.chatLog.map((message) => ({
-        id: message.timeStamp.toString(), // Using timestamp as a unique id
-        content: message.content,
-        role: message.role,
-        timestamp: new Date(message.timeStamp * 1000).toISOString(),
-      }))
-      dispatch({ type: "SET_MESSAGES", payload: messages })
+        // Update messages state with the chat log
+        const messages = restoredChat.chatLog.map((message) => ({
+          id: message.timeStamp.toString(), // Using timestamp as a unique id
+          content: message.content,
+          role: message.role,
+          timestamp: new Date(message.timeStamp * 1000).toISOString(),
+        }))
+        dispatch({ type: "SET_MESSAGES", payload: messages })
 
-      // Set the next question as the last assistant message, if any
-      const lastAssistantMessage = restoredChat.chatLog
-        .filter((msg) => msg.role.toLowerCase() === "assistant")
-        .pop()
-      if (lastAssistantMessage) {
-        setNextQuestion(lastAssistantMessage.content)
+        // Set the next question as the last assistant message, if any
+        const lastAssistantMessage = restoredChat.chatLog
+          .filter((msg) => msg.role.toLowerCase() === "assistant")
+          .pop()
+        if (lastAssistantMessage) {
+          setNextQuestion(lastAssistantMessage.content)
+        }
+
+        setIsInitialMessage(false)
       }
-
-      setIsInitialMessage(false)
+      setIsInitialLoad(false)
     }
-  }, [restoredChat, dispatch, status])
+  }, [restoredChat, dispatch, status, isInitialLoad])
 
   // Use useQuery for the initial message
-  const { mutate: sendInitialMessage } = useMutation({
+  const { mutate: sendInitialMessage, isPending } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        "http://192.168.137.19:49234/ask-tax-assistant",
+        `http://192.168.137.19:49234/ask-tax-assistant/${id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userMessage: sentence,
             declarationType,
-            isInitialMessage: true,
-            ConversationId: id,
+            isInitialMessage: isInitialMessage,
           }),
         }
       )
-      return response.json()
+      return await response.json()
     },
     onSuccess: (data) => {
-      console.log(data)
+      // add the user message to the state.messages array
+      dispatch({
+        type: "ADD_MESSAGE",
+        payload: {
+          id: nanoid(), // Generate a unique ID for the new message
+          content: sentence,
+          role: "user", // Assuming the role is 'user' for the user message
+          timestamp: new Date().toISOString(), // Current timestamp
+        },
+      })
 
-      dispatch({ type: "SET_RESPONSE_DATA", payload: data.formState })
-      setNextQuestion(data.nextQuestion)
-      setIsInitialMessage(false)
+      if (data.formData) {
+        // push the data.message into the state.messages array
+        dispatch({
+          type: "ADD_MESSAGE",
+          payload: {
+            id: nanoid(), // Generate a unique ID for the new message
+            content: data.message,
+            role: "assistant", // Assuming the role is 'assistant' for the response
+            timestamp: new Date().toISOString(), // Current timestamp
+          },
+        })
+
+        dispatch({
+          type: "SET_RESPONSE_DATA",
+          payload: { formData: data.formData },
+        })
+
+        setNextQuestion(data.message)
+        setIsInitialMessage(false)
+      }
+      // toast.error("Nie udało się pobrać danych")
     },
     onError: (error) => {
       console.log(error)
@@ -108,25 +139,15 @@ export default function ClientForm({
       // }
       dispatch({ type: "SET_ERROR", payload: error.message })
     },
+    onSettled: () => {
+      setSentence("")
+    },
   })
 
   const { formRef, onKeyDown } = useEnterSubmit()
 
-  const handleSubmit = async () => {
-    if (isInitialMessage) {
-      sendInitialMessage(undefined, {
-        onSuccess: (data) => {
-          console.log(data)
-
-          dispatch({ type: "SET_RESPONSE_DATA", payload: data.formState })
-          setNextQuestion(data.nextQuestion)
-          setIsInitialMessage(false)
-        },
-      })
-    }
-  }
-
   const { messagesRef, scrollRef, visibilityRef } = useScrollAnchor()
+console.log(state);
 
   return (
     <div
@@ -136,14 +157,20 @@ export default function ClientForm({
       <div className="h-[100dvh] overflow-auto pb-[200px] pt-4 md:pt-10">
         {state.messages.length ? (
           <div className="relative mx-auto max-w-2xl px-4">
-            {state.messages.map((message, index) => (
-              <div key={message.id}>
-                {message.display}
-                {index < state.messages.length - 1 && (
-                  <Separator className="my-4" />
-                )}
-              </div>
-            ))}
+            {state.messages
+              .sort(
+                (a, b) =>
+                  new Date(a.timestamp).getTime() -
+                  new Date(b.timestamp).getTime()
+              )
+              .map((message, index) => (
+                <div key={message.id}>
+                  {message.content}
+                  {index < state.messages.length - 1 && (
+                    <Separator className="my-4" />
+                  )}
+                </div>
+              ))}
           </div>
         ) : (
           <EmptyScreen />
@@ -156,7 +183,7 @@ export default function ClientForm({
                 ref={formRef}
                 onSubmit={(e) => {
                   e.preventDefault()
-                  handleSubmit()
+                  sendInitialMessage()
                 }}
                 className="flex flex-row space-x-2"
               >
@@ -168,7 +195,7 @@ export default function ClientForm({
                   className="flex-1 resize-none"
                   rows={1}
                 />
-                <Button type="submit" size="icon">
+                <Button type="submit" size="icon" disabled={isPending}>
                   <Wand2 className="h-4 w-4" />
                   <span className="sr-only">Send message</span>
                 </Button>

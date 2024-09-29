@@ -6,6 +6,8 @@ import {
   TStepMid,
 } from "@/app/types/steps"
 
+import { useFormMutation } from "@/lib/hooks/use-form-mutation"
+
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
@@ -26,12 +28,15 @@ export default function Step2({
   handlePreviousStep,
 }: TStepMid) {
   const { formData } = state
+  const { mutate, isPending } = useFormMutation()
+  const handleSubmit = () => {
+    mutate(state.nanoId)
+  }
   return (
     <form className="flex flex-col gap-2 ">
-
       {/* <div className="flex flex-col gap-2 bg-muted p-4 border-b border-input"> */}
-        {/* FOR ALL address fields check if any of the address fields arent JUST "" and is so tell the user which one is still required */}
-        {/* {Object.entries(formData.address).map(([key, value]) => 
+      {/* FOR ALL address fields check if any of the address fields arent JUST "" and is so tell the user which one is still required */}
+      {/* {Object.entries(formData.address).map(([key, value]) => 
           { 
             // formate the keys to not have a _ and to start the first letter with capital but only the first letter of the key 
             const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
@@ -50,7 +55,7 @@ export default function Step2({
             Typ podatnika<span className="text-red-500">*</span>
           </Label>
           <RadioGroup
-            value={formData.taxpayer_type}
+            value={formData.taxpayer_type || ""}
             onValueChange={(value) => handleChange("taxpayer_type", value)}
             className="flex flex-col space-y-1"
           >
@@ -213,7 +218,7 @@ export default function Step2({
           <Select
             name="country"
             required
-            value={formData.address.country}
+            value={formData.address.country || ""}
             onValueChange={(value) => handleChange("address.country", value)}
           >
             <SelectTrigger className="w-full invalid:border-red-500 invalid:border-b">
@@ -226,7 +231,7 @@ export default function Step2({
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
-          {!formData.address.country && (
+          {!formData.address.country && formData.address.country !== "" && (
             <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
           )}
         </div>
@@ -240,10 +245,10 @@ export default function Step2({
             id="province"
             name="province"
             required
-            value={formData.address.province}
+            value={formData.address.province || ""}
             onChange={(e) => handleChange("address.province", e.target.value)}
           />
-          {!formData.address.province && (
+          {!formData.address.province && formData.address.province !== "" && (
             <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
           )}
         </div>
@@ -257,7 +262,7 @@ export default function Step2({
             id="county"
             name="county"
             required
-            value={formData.address.county}
+            value={formData.address.county || ""}
             onChange={(e) => handleChange("address.county", e.target.value)}
           />
           {!formData.address.county && (
@@ -292,7 +297,7 @@ export default function Step2({
             type="text"
             id="street"
             name="street"
-            value={formData.address.street}
+            value={formData.address.street || ""}
             onChange={(e) => handleChange("address.street", e.target.value)}
           />
           {!formData.address.street && (
@@ -309,7 +314,7 @@ export default function Step2({
             id="house_number"
             name="house_number"
             required
-            value={formData.address.house_number}
+            value={formData.address.house_number || ""}
             onChange={(e) =>
               handleChange("address.house_number", e.target.value)
             }
@@ -330,7 +335,7 @@ export default function Step2({
             type="text"
             id="apartment_number"
             name="apartment_number"
-            value={formData.address.apartment_number}
+            value={formData.address.apartment_number || ""}
             onChange={(e) =>
               handleChange("address.apartment_number", e.target.value)
             }
@@ -349,7 +354,7 @@ export default function Step2({
             id="city"
             name="city"
             required
-            value={formData.address.city}
+            value={formData.address.city || ""}
             onChange={(e) => handleChange("address.city", e.target.value)}
           />
           {!formData.address.city && (
@@ -366,7 +371,7 @@ export default function Step2({
             id="postal_code"
             name="postal_code"
             required
-            value={formData.address.postal_code}
+            value={formData.address.postal_code || ""}
             onChange={(e) =>
               handleChange("address.postal_code", e.target.value)
             }
@@ -386,12 +391,13 @@ export default function Step2({
         >
           Poprzedni krok
         </Button>
-          <Button type="button" className="font-bold" onClick={handleNextStep}>
+        <Button type="button" className="font-bold" onClick={handleNextStep}>
           Następny krok
         </Button>
         <SaveStep
           className="ml-auto"
-          disabled={!formData.address.country || !formData.address.province || !formData.address.county || !formData.address.municipality || !formData.address.street || !formData.address.house_number || !formData.address.apartment_number || !formData.address.city || !formData.address.postal_code}
+          handleSubmit={handleSubmit}
+          disabled={state.sameDataAsResponse === false || isPending}
         />
       </div>
     </form>

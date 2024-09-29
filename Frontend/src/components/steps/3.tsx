@@ -2,6 +2,8 @@
 
 import { TStepMid } from "@/app/types/steps"
 
+import { useFormMutation } from "@/lib/hooks/use-form-mutation"
+
 import { Button } from "../ui/button"
 import SaveStep from "./save-step"
 
@@ -12,6 +14,11 @@ export default function Step3({
   handlePreviousStep,
 }: TStepMid) {
   const { formData } = state
+
+  const { mutate, isPending } = useFormMutation()
+  const handleSubmit = () => {
+    mutate(state.nanoId)
+  }
   return (
     <form className="flex flex-col gap-5">
       <div className="flex flex-col  gap-4 p-4">
@@ -77,8 +84,9 @@ export default function Step3({
           Następny krok
         </Button>
         <SaveStep
+          handleSubmit={handleSubmit}
           className="ml-auto"
-          disabled={!formData.action_description || !formData.amount}
+          disabled={state.sameDataAsResponse === false || isPending}
         />
       </div>
     </form>

@@ -5,19 +5,36 @@ export const useLocalStorage = <T>(
   initialValue: T
 ): [T, (value: T) => void] => {
   const [storedValue, setStoredValue] = useState(initialValue)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  // // On initial load, check if a key called 'newChatId' exists in localStorage. If it does, prompt the user to decide whether to continue from the last chat history or to clear it.
+
+
+  // useEffect(() => {
+  //   if (isInitialLoad) {
+  //     const item = window.localStorage.getItem(key)
+  //     if (item !== null) {
+  //       setStoredValue(JSON.parse(item))
+  //     }
+  //     setIsInitialLoad(false)
+  //   }
+  // }, [isInitialLoad, key])
+
+
 
   useEffect(() => {
     // Retrieve from localStorage
-    const item = window.localStorage.getItem(key)
-    if (item !== null) {
-      try {
-        setStoredValue(JSON.parse(item))
-      } catch (error) {
-        console.error('Error parsing stored value:', error)
-        setStoredValue(initialValue)
+    if (isInitialLoad) {
+
+      const item = window.localStorage.getItem(key)
+      if (item !== null) {
+        const userAgreed = window.confirm('Do you agree to load the existing data from local storage?')
+        if (userAgreed) {
+          setStoredValue(JSON.parse(item))
+        }
       }
     }
-  }, [key, initialValue])
+
+  }, [key, isInitialLoad])
 
   const setValue = (value: T) => {
     // Save state

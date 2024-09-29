@@ -14,7 +14,7 @@ export default function SaveStep({
   handleSubmit,
 }: SaveStepProps) {
   return (
-    <Button className={className} onClick={handleSubmit} disabled={disabled}>
+    <Button type="button" className={className} onClick={handleSubmit} disabled={disabled}>
       <Save className="mr-2 h-4 w-4" /> Zapisz
     </Button>
   )
