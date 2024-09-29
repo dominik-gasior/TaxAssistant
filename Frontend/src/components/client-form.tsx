@@ -39,7 +39,7 @@ export default function ClientForm({
     queryFn: async () => {
       if (!storedChatId) return null
       const response = await fetch(
-        `http://192.168.137.185:49234//restore-chat?conversationId=${storedChatId}`
+        `http://192.168.137.19:49234/restore-chat?conversationId=${storedChatId}`
       )
       if (!response.ok) throw new Error("Failed to restore chat")
       return response.json()
@@ -79,7 +79,7 @@ export default function ClientForm({
   const { mutate: sendInitialMessage } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        "http://192.168.137.185:49234/ask-tax-assistant",
+        "http://192.168.137.19:49234/ask-tax-assistant",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

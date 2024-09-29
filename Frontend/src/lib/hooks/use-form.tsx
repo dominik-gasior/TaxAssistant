@@ -50,6 +50,8 @@ type Action =
 const reducer = (state: TFormState, action: Action): TFormState => {
   switch (action.type) {
     case "RESET_FORM":
+        console.log("invoike kurwa reset pizdo");
+        
       localStorage.removeItem("newChatId") // AND delete the localstorage id
 
       return { ...initialFormState, messages: [] }

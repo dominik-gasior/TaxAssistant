@@ -52,6 +52,7 @@ export type TStepStart = {
     state: TFormState
     handleChange: HandleChangeFunction
     handleNextStep: () => void
+    saving
 }
 export type TStepMid = {
     state: TFormState
