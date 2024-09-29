@@ -22,7 +22,7 @@ public class TaxAssistantController : ControllerBase
         _conversationReader = conversationReader;
     }
     
-    [HttpPost("ask-tax-assistant")]
+    [HttpPost("ask-tax-assistant/{conversationId}")]
     public async Task<IActionResult> GenerateLlmResponse(string conversationId, [FromBody] GenerateLlmRequest request)
     {
         var userRequestTimestamp = DateTime.Now.Ticks;

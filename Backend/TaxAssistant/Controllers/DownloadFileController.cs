@@ -18,7 +18,7 @@ public class DownloadFileController : ControllerBase
         _formService = formService;
     }
 
-    [HttpGet("download-file")]
+    [HttpGet("download-file/{conversationId}")]
     public async Task<IActionResult> Get(string conversationId)
     {
         var conversation = await _conversationReader.GetLatestConversationLog(conversationId);

@@ -10,17 +10,24 @@ public class SendFormController : ControllerBase
 {
     private readonly IFormService _formService;
     private readonly EDeclarationClient _eDeclarationClient;
+    private readonly ConversationReader _conversationReader;
 
-    public SendFormController(IFormService formService, EDeclarationClient eDeclarationClient)
+    public SendFormController(
+        IFormService formService,
+        EDeclarationClient eDeclarationClient,
+        ConversationReader conversationReader)
     {
         _formService = formService;
         _eDeclarationClient = eDeclarationClient;
+        _conversationReader = conversationReader;
     }
 
-    [HttpPost("send-form")]
-    public async Task<IActionResult> Post([FromBody] FormModel model)
+    [HttpPost("send-form/{conversationId}")]
+    public async Task<IActionResult> Post(string conversationId)
     {
-        var file = _formService.Generate("Templates/PCC-3(6).xml", model);
+        var conversation = await _conversationReader.GetLatestConversationLog(conversationId);
+        if (conversation is null) return NotFound();
+        var file = _formService.Generate("Templates/PCC-3(6).xml", conversation.FormModel);
         await _eDeclarationClient.SendForm(file);
         return Ok();
     }
