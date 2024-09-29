@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import SaveStep from "./save-step"
 
 export default function Step2({
   state,
@@ -28,15 +29,15 @@ export default function Step2({
   return (
     <form className="flex flex-col gap-2 ">
 
-      <div className="flex flex-col gap-2 bg-muted p-4 border-b border-input">
+      {/* <div className="flex flex-col gap-2 bg-muted p-4 border-b border-input"> */}
         {/* FOR ALL address fields check if any of the address fields arent JUST "" and is so tell the user which one is still required */}
-        {Object.entries(formData.address).map(([key, value]) => 
+        {/* {Object.entries(formData.address).map(([key, value]) => 
           { 
             // formate the keys to not have a _ and to start the first letter with capital but only the first letter of the key 
             const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
             return value === "" ? <p key={key} className="text-sm text-red-500 mt-1">{`${formattedKey.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} jest obowiązkowe`}</p> : null}
-        )}
-      </div>
+        // )} */}
+      {/* </div> */}
       <div className="flex flex-col gap-4 p-4 mb-4 border-b border-input">
         <h1 className="text-2xl font-bold">Dane podatnika</h1>
         <p className="text-sm text-gray-500 mb-4">
@@ -225,7 +226,9 @@ export default function Step2({
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
-    
+          {!formData.address.country && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -240,7 +243,9 @@ export default function Step2({
             value={formData.address.province}
             onChange={(e) => handleChange("address.province", e.target.value)}
           />
-        
+          {!formData.address.province && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -255,7 +260,9 @@ export default function Step2({
             value={formData.address.county}
             onChange={(e) => handleChange("address.county", e.target.value)}
           />
-          
+          {!formData.address.county && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -272,7 +279,9 @@ export default function Step2({
               handleChange("address.municipality", e.target.value)
             }
           />
-         
+          {!formData.address.municipality && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -286,7 +295,9 @@ export default function Step2({
             value={formData.address.street}
             onChange={(e) => handleChange("address.street", e.target.value)}
           />
-       
+          {!formData.address.street && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -303,7 +314,9 @@ export default function Step2({
               handleChange("address.house_number", e.target.value)
             }
           />
-        
+          {!formData.address.house_number && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -322,7 +335,9 @@ export default function Step2({
               handleChange("address.apartment_number", e.target.value)
             }
           />
-       
+          {!formData.address.apartment_number && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -337,7 +352,9 @@ export default function Step2({
             value={formData.address.city}
             onChange={(e) => handleChange("address.city", e.target.value)}
           />
-        
+          {!formData.address.city && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -354,7 +371,9 @@ export default function Step2({
               handleChange("address.postal_code", e.target.value)
             }
           />
-         
+          {!formData.address.postal_code && (
+            <p className="text-sm text-red-500 mt-1">Pole jest obowiązkowe</p>
+          )}
         </div>
       </div>
 
@@ -367,9 +386,13 @@ export default function Step2({
         >
           Poprzedni krok
         </Button>
-        <Button type="button" className="font-bold" onClick={handleNextStep}>
+          <Button type="button" className="font-bold" onClick={handleNextStep}>
           Następny krok
         </Button>
+        <SaveStep
+          className="ml-auto"
+          disabled={!formData.address.country || !formData.address.province || !formData.address.county || !formData.address.municipality || !formData.address.street || !formData.address.house_number || !formData.address.apartment_number || !formData.address.city || !formData.address.postal_code}
+        />
       </div>
     </form>
   )

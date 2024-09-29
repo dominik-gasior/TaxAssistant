@@ -38,8 +38,8 @@ const TAX_TYPES = [
       "Informacje dla osób fizycznych, przedsiębiorców, taryfy celne, ograniczenia przywozu i wywozu towaru, zwolnienia.",
   },
   {
-    name: "PCC",
-    link: "pcc",
+    name: "PCC3",
+    link: "pcc3",
     description:
       "Tu rozliczysz podatek od czynności cywilnoprawnych oraz podatków od spadków i darowizn. Ulgi, podliczenia, stawki i limity.",
   },

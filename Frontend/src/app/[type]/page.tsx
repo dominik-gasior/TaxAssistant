@@ -1,21 +1,34 @@
-'use client'
-import { Button } from "@/components/ui/button"
-import { useForm } from "@/lib/hooks/use-form"
+"use client"
+
+import { useMutation } from "@tanstack/react-query"
 import { ChevronLeft } from "lucide-react"
-import { HandleChangeFunction } from "../types/steps"
+
+import { useForm } from "@/lib/hooks/use-form"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import Step1 from "@/components/steps/1"
 import Step2 from "@/components/steps/2"
 import Step3 from "@/components/steps/3"
 import Step4 from "@/components/steps/4"
 
+import { HandleChangeFunction } from "../types/steps"
+
 export default function Page() {
   const { state, dispatch } = useForm()
   const { currentStep, totalSteps } = state
 
-  
   const handleNextStep = () => dispatch({ type: "NEXT_STEP" })
   const handlePreviousStep = () => dispatch({ type: "PREVIOUS_STEP" })
-
 
   const handleChange: HandleChangeFunction = (name: string, value: any) => {
     dispatch({
@@ -24,51 +37,59 @@ export default function Page() {
     })
   }
 
-  const handleSave = async () => {
-    try {
-      const response = await fetch("/api/save-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(state.formData),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to save data")
-      }
-
-      const responseData = await response.json()
-      dispatch({ type: "SET_RESPONSE_DATA", payload: responseData })
-    } catch (error) {
-      console.error("Error saving data:", error)
-      // Handle error (e.g., show error message to user)
-    }
-  }
   return (
-    <div className="max-w-2xl mx-auto  w-full  border-r border-input">
-      {currentStep !== 0 && (
-        <div className="flex gap-4 items-center py-2 text-lg ">
-          <Button onClick={handlePreviousStep}>
-            <ChevronLeft size={16} /> Wroc
-          </Button>
+    <div className="max-w-2xl mx-auto  w-full overflow-auto border-r border-input">
+      <div className="flex gap-4 items-center py-2 text-lg ">
+        <Button onClick={handlePreviousStep}>
+          <ChevronLeft size={16} /> Wroc
+        </Button>
 
-          <div className="bg-muted rounded-md w-fit px-4 h-10 flex items-center">
-            <h3>
-              Krok{" "}
-              <span className="text-foreground font-bold">{currentStep}</span> /{" "}
-              {totalSteps}
-            </h3>
-          </div>
+        <div className="bg-muted rounded-md w-fit px-4 h-10 flex items-center">
+          <h3>
+            Krok{" "}
+            <span className="text-foreground font-bold">{currentStep}</span> /{" "}
+            {totalSteps}
+          </h3>
         </div>
-      )}
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              className="ml-auto"
+              onClick={() => dispatch({ type: "RESET_FORM" })}
+            >
+              Reset
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Czy na pewno chcesz to zrobić?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Ta akcja jest nieodwracalna. Spowoduje to usunięcie wszystkich
+                informacji, historię czatu oraz dane we wszystkich rubrykach
+                formularza.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Anuluj</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => dispatch({ type: "RESET_FORM" })}
+              >
+                Kontynuuj
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
       {currentStep === 1 && (
         <Step1
           state={state}
           handleChange={handleChange}
           handleNextStep={handleNextStep}
-          onSave={handleSave}
         />
       )}
       {currentStep === 2 && (
@@ -77,7 +98,6 @@ export default function Page() {
           handleChange={handleChange}
           handleNextStep={handleNextStep}
           handlePreviousStep={handlePreviousStep}
-          onSave={handleSave}
         />
       )}
       {currentStep === 3 && (
@@ -86,7 +106,6 @@ export default function Page() {
           handleChange={handleChange}
           handleNextStep={handleNextStep}
           handlePreviousStep={handlePreviousStep}
-          onSave={handleSave}
         />
       )}
       {currentStep === 4 && (
@@ -94,7 +113,6 @@ export default function Page() {
           state={state}
           handleChange={handleChange}
           handlePreviousStep={handlePreviousStep}
-          onSave={handleSave}
         />
       )}
     </div>

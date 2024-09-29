@@ -9,10 +9,15 @@ export const useLocalStorage = <T>(
   useEffect(() => {
     // Retrieve from localStorage
     const item = window.localStorage.getItem(key)
-    if (item) {
-      setStoredValue(JSON.parse(item))
+    if (item !== null) {
+      try {
+        setStoredValue(JSON.parse(item))
+      } catch (error) {
+        console.error('Error parsing stored value:', error)
+        setStoredValue(initialValue)
+      }
     }
-  }, [key])
+  }, [key, initialValue])
 
   const setValue = (value: T) => {
     // Save state

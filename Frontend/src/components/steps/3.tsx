@@ -10,7 +10,6 @@ export default function Step3({
   handleChange,
   handleNextStep,
   handlePreviousStep,
-  onSave,
 }: TStepMid) {
   const { formData } = state
   return (
@@ -77,7 +76,10 @@ export default function Step3({
         <Button type="button" className="font-bold" onClick={handleNextStep}>
           Następny krok
         </Button>
-        <SaveStep onSave={onSave} disabled={!formData.action_description || !formData.amount} />
+        <SaveStep
+          className="ml-auto"
+          disabled={!formData.action_description || !formData.amount}
+        />
       </div>
     </form>
   )

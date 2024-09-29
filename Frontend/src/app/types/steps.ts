@@ -3,6 +3,8 @@ export type TFormState = {
     totalSteps: number;
     sameDataAsResponse: boolean;
     formData: TFormData
+    error: string;
+    messages: any[];
 };
 
 export type TFormData = {
@@ -50,21 +52,18 @@ export type TStepStart = {
     state: TFormState
     handleChange: HandleChangeFunction
     handleNextStep: () => void
-    onSave: () => void
 }
 export type TStepMid = {
     state: TFormState
     handleChange: HandleChangeFunction
     handleNextStep: () => void
     handlePreviousStep: () => void
-    onSave: () => void
 }
 
 export type TStepFinal = {
     state: TFormState
     handleChange: HandleChangeFunction
     handlePreviousStep: () => void
-    onSave: () => void
 }
 
 
