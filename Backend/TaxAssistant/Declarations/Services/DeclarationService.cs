@@ -33,11 +33,13 @@ public class DeclarationService : IDeclarationService
 
             if (classificationResult)
             {
+                var formModelWrapper = await GenerateQuestionAboutNextMissingFieldAsync(strategy.DeclarationType, userMessage);
+                
                 return new NextQuestionGenerationResponse
                 (
                     strategy.DeclarationType,
-                    null,
-                    await _llmService.GenerateMessageAsync(PromptsProvider.DetectedDeclarationFormat(userMessage, strategy.DeclarationType), "text")
+                    formModelWrapper.FormModel,
+                    formModelWrapper.Message
                 );
             }
         }

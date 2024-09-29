@@ -136,6 +136,25 @@ public static class PromptsProvider
          """;
     }
     
+    public static string Summarize(string userMessage, string botMessage)
+    {
+        return 
+            $"""
+             Stworz wiadomosc z polaczenia dwoch ponizej, poinformuj uzytkownika ktora ktora deklaracja jest odpowiednia dla jego sprawy ogranicz odpowiedz do 1 zdania
+             {LanguageInstruction}
+
+             WIADOMOSC UZYTKOWNIKA
+             '''{userMessage}'''
+             KONIEC WIADOMOSCI
+             
+             WIADOMOSC BOTA
+             '''{botMessage}'''
+             KONIEC WIADOMOSCI
+
+             Odpowiedz: Wiadomosc skierowana do uzytkownika
+             """;
+    }
+    
     public static string NoMatchingDeclarationType(string message)
     {
         return 
