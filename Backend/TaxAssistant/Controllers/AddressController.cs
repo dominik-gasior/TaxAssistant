@@ -53,5 +53,12 @@ namespace TaxAssistant.Controllers
 
             return Ok(streets);
         }
+        
+        [HttpGet("offices")]
+        public async Task<IActionResult> GetOffices()
+        {
+            var offices = _eterytService.GetOffices();
+            return Ok(offices);
+        }
     }
 }

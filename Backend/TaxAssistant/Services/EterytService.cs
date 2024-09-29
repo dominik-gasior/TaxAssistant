@@ -1,5 +1,3 @@
-using System;
-
 namespace TaxAssistant.Services;
 
 public interface IEterytService
@@ -9,6 +7,8 @@ public interface IEterytService
     object GetMunicipalities(string voivodeshipID, string provinceID);
     object GetCities(string voivodeshipID, string provinceID, string municipalityID);
     object GetStreets(string voivodeshipID, string provinceID, string municipalityID);
+    List<string> GetOffices();
+    public bool ValidateOffices(string officeId);
 }
 
 public class EterytService : IEterytService
@@ -75,5 +75,8 @@ public class EterytService : IEterytService
                 WOJ = x.Element("WOJ")?.Value,
                 NAZWA = x.Element("NAZWA")?.Value,
             }).ToList();
+
+    public List<string> GetOffices() => _eterytFiles.officies;
+    public bool ValidateOffices(string officeId) => _eterytFiles.officies.Exists(x => x == officeId);
 
 }

@@ -78,7 +78,7 @@ public class FormModelValidator
         //TODO: officeName
         var validProps = new List<string>();
         if (formModel.DateOfAction > DateOnly.FromDateTime(DateTime.Now.AddDays(-14))) validProps.Add(nameof(formModel.DateOfAction));
-        if (formModel.OfficeName is "") validProps.Add(nameof(formModel.OfficeName));
+        if (new EterytFiles().officies.Contains(formModel.OfficeName ?? "")) validProps.Add(nameof(formModel.OfficeName));
         if (formModel.EntitySubmittingAction is <= 5 and > 1) validProps.Add(nameof(formModel.EntitySubmittingAction));
         if (formModel.TaxpayerType is "individual" or "company") validProps.Add(nameof(formModel.TaxpayerType));
         if (formModel.ActionDescription?.Length is > 0 and < 3500) validProps.Add(nameof(formModel.ActionDescription));
